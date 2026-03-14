@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Announcements</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #f4f7fb;
+            padding: 20px;
+        }
+        .container {
+            max-width: 800px;
+            margin: auto;
+        }
+        .item {
+            background: white;
+            padding: 18px;
+            border-radius: 12px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.08);
+            margin-bottom: 14px;
+        }
+        h2 {
+            color: #1f4e79;
+        }
+        a {
+            display: inline-block;
+            margin-top: 12px;
+            text-decoration: none;
+            background: #1f4e79;
+            color: white;
+            padding: 10px 14px;
+            border-radius: 8px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>Announcements</h2>
+
+        {% for a in announcements %}
+            <div class="item">
+                <h3>{{ a.title }}</h3>
+                <p>{{ a.content }}</p>
+                <small>{{ a.created_at }}</small>
+            </div>
+        {% empty %}
+            <div class="item">No announcements yet.</div>
+        {% endfor %}
+
+        <a href="{% url 'owner_home' %}">Back</a>
+    </div>
+</body>
+</html>

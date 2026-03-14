@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Send Message</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #f4f7fb;
+            padding: 20px;
+        }
+        .card {
+            max-width: 500px;
+            margin: auto;
+            background: white;
+            padding: 25px;
+            border-radius: 14px;
+            box-shadow: 0 0 12px rgba(0,0,0,0.08);
+        }
+        h2 { color: #1f4e79; }
+        textarea {
+            width: 100%;
+            box-sizing: border-box;
+            padding: 10px;
+            border-radius: 8px;
+            border: 1px solid #ccc;
+            margin-top: 10px;
+        }
+        button {
+            width: 100%;
+            margin-top: 12px;
+            padding: 12px;
+            background: #2e8b57;
+            color: white;
+            border: none;
+            border-radius: 8px;
+        }
+        .success {
+            color: green;
+            text-align: center;
+        }
+        a {
+            display: inline-block;
+            margin-top: 12px;
+            text-decoration: none;
+            background: #1f4e79;
+            color: white;
+            padding: 10px 14px;
+            border-radius: 8px;
+        }
+    </style>
+</head>
+<body>
+    <div class="card">
+        <h2>Send Message</h2>
+        <p><strong>House:</strong> {{ house.house_number }}</p>
+
+        <form method="post">
+            {% csrf_token %}
+            <textarea name="message_text" rows="5" placeholder="Type your message here"></textarea>
+            <button type="submit">Send</button>
+        </form>
+
+        <p class="success">{{ success }}</p>
+
+        <a href="{% url 'owner_home' %}">Back</a>
+    </div>
+</body>
+</html>

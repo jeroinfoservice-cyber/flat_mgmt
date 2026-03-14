@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Owner Home</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #f4f7fb;
+            padding: 20px;
+        }
+        .card {
+            max-width: 500px;
+            margin: auto;
+            background: white;
+            padding: 25px;
+            border-radius: 14px;
+            box-shadow: 0 0 12px rgba(0,0,0,0.08);
+        }
+        h2 {
+            color: #1f4e79;
+        }
+        a {
+            display: block;
+            text-decoration: none;
+            text-align: center;
+            margin-top: 12px;
+            padding: 12px;
+            border-radius: 8px;
+            color: white;
+            background: #1f4e79;
+        }
+        .green { background: #2e8b57; }
+        .gold { background: #b8860b; }
+        .red { background: #b22222; }
+    </style>
+</head>
+<body>
+    <div class="card">
+        <h2>Welcome {{ house.owner_name }}</h2>
+        <p><strong>House Number:</strong> {{ house.house_number }}</p>
+
+        <a href="{% url 'owner_payments' %}">View Payment History</a>
+        <a class="green" href="{% url 'owner_announcements' %}">View Announcements</a>
+        <a class="gold" href="{% url 'owner_message' %}">Send Message</a>
+        <a class="red" href="{% url 'owner_logout' %}">Logout</a>
+    </div>
+</body>
+</html>
