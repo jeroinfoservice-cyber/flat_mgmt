@@ -1,0 +1,8 @@
+HOST NAME - dpg-d6qmnpsr85hc73f0s3cg-a
+PORT - 5432
+DATABASE - flat_mgmt_db
+USER NAME - flat_mgmt_db_yzn8_user
+PASSWORD - C9QpPficXwfkVKBjYVz3cHKNJg7NLVWK
+INTERNAL DATABSE URL - postgresql://flat_mgmt_db_yzn8_user:C9QpPficXwfkVKBjYVz3cHKNJg7NLVWK@dpg-d6qmrqfgi27c73a6isbg-a/flat_mgmt_db_yzn8
+EXTERNAL DATABSE URL - postgresql://flat_mgmt_db_yzn8_user:C9QpPficXwfkVKBjYVz3cHKNJg7NLVWK@dpg-d6qmrqfgi27c73a6isbg-a.singapore-postgres.render.com/flat_mgmt_db_yzn8
+PSQL COMMAND - PGPASSWORD=C9QpPficXwfkVKBjYVz3cHKNJg7NLVWK psql -h dpg-d6qmrqfgi27c73a6isbg-a.singapore-postgres.render.com -U flat_mgmt_db_yzn8_user flat_mgmt_db_yzn8
