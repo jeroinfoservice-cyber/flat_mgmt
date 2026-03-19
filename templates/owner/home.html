@@ -2,36 +2,91 @@
 <html>
 <head>
     <title>Owner Home</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
     <style>
         body {
             font-family: Arial, sans-serif;
             background: #f4f7fb;
+            margin: 0;
             padding: 20px;
         }
+
         .card {
+            width: 100%;
             max-width: 500px;
-            margin: auto;
+            margin: 20px auto;
             background: white;
-            padding: 25px;
-            border-radius: 14px;
+            padding: 22px;
+            border-radius: 16px;
             box-shadow: 0 0 12px rgba(0,0,0,0.08);
+            box-sizing: border-box;
         }
+
         h2 {
             color: #1f4e79;
+            margin-top: 0;
+            margin-bottom: 10px;
+            font-size: 28px;
         }
+
+        p {
+            margin: 0 0 18px 0;
+            font-size: 18px;
+        }
+
         a {
             display: block;
+            width: 100%;
             text-decoration: none;
             text-align: center;
             margin-top: 12px;
-            padding: 12px;
-            border-radius: 8px;
+            padding: 14px 12px;
+            border-radius: 10px;
             color: white;
             background: #1f4e79;
+            font-size: 17px;
+            font-weight: bold;
+            box-sizing: border-box;
         }
-        .green { background: #2e8b57; }
-        .gold { background: #b8860b; }
-        .red { background: #b22222; }
+
+        .green {
+            background: #2e8b57;
+        }
+
+        .gold {
+            background: #b8860b;
+        }
+
+        .red {
+            background: #b22222;
+        }
+
+        @media (max-width: 600px) {
+            body {
+                padding: 14px;
+            }
+
+            .card {
+                max-width: 100%;
+                margin: 10px auto;
+                padding: 18px;
+                border-radius: 14px;
+            }
+
+            h2 {
+                font-size: 24px;
+            }
+
+            p {
+                font-size: 17px;
+            }
+
+            a {
+                font-size: 16px;
+                padding: 13px 10px;
+            }
+        }
     </style>
 </head>
 <body>

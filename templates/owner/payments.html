@@ -1,106 +1,100 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Payment History</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            background: #f4f7fb;
-            padding: 20px;
-        }
-        .card {
-            max-width: 900px;
-            margin: auto;
-            background: white;
-            padding: 25px;
-            border-radius: 14px;
-            box-shadow: 0 0 12px rgba(0,0,0,0.08);
-        }
-        h2 {
-            color: #1f4e79;
-        }
-        table {
-            width: 100%;
-            border-collapse: collapse;
-        }
-        th, td {
-            border: 1px solid #ddd;
-            padding: 10px;
-            text-align: center;
-        }
-        th {
-            background: #1f4e79;
-            color: white;
-        }
-        .paid {
-            color: green;
-            font-weight: bold;
-        }
-        .notpaid {
-            color: red;
-            font-weight: bold;
-        }
-        .btn {
-            display: inline-block;
-            text-decoration: none;
-            background: #1f4e79;
-            color: white;
-            padding: 8px 12px;
-            border-radius: 8px;
-            font-size: 14px;
-        }
-        .back-btn {
-            display: inline-block;
-            margin-top: 15px;
-            text-decoration: none;
-            background: #1f4e79;
-            color: white;
-            padding: 10px 14px;
-            border-radius: 8px;
-        }
-    </style>
+<title>Payment History</title>
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<style>
+
+body{
+font-family:Arial;
+background:#f4f7fb;
+margin:0;
+padding:20px;
+}
+
+.card{
+max-width:600px;
+margin:auto;
+background:white;
+padding:20px;
+border-radius:15px;
+box-shadow:0 0 12px rgba(0,0,0,0.08);
+}
+
+table{
+width:100%;
+border-collapse:collapse;
+}
+
+th,td{
+padding:10px;
+border-bottom:1px solid #ddd;
+text-align:center;
+}
+
+th{
+background:#1f4e79;
+color:white;
+}
+
+.paid{
+color:green;
+font-weight:bold;
+}
+
+a{
+display:block;
+margin-top:15px;
+text-align:center;
+background:#1f4e79;
+color:white;
+padding:10px;
+border-radius:8px;
+text-decoration:none;
+}
+
+</style>
 </head>
+
 <body>
-    <div class="card">
-        <h2>Payment History - {{ house.house_number }}</h2>
 
-        <table>
-            <tr>
-                <th>Month</th>
-                <th>Amount</th>
-                <th>Status</th>
-                <th>Date Paid</th>
-                <th>Receipt</th>
-            </tr>
+<div class="card">
 
-            {% for p in payments %}
-            <tr>
-                <td>{{ p.month }}</td>
-                <td>RM {{ p.amount }}</td>
-                <td>
-                    {% if p.status == "Paid" %}
-                        <span class="paid">Paid</span>
-                    {% else %}
-                        <span class="notpaid">Not Paid</span>
-                    {% endif %}
-                </td>
-                <td>{{ p.date_paid }}</td>
-                <td>
-                    {% if p.status == "Paid" %}
-                        <a class="btn" href="{% url 'owner_receipt' p.id %}">View Receipt</a>
-                    {% else %}
-                        -
-                    {% endif %}
-                </td>
-            </tr>
-            {% empty %}
-            <tr>
-                <td colspan="5">No payment records found.</td>
-            </tr>
-            {% endfor %}
-        </table>
+<h2>Payment History - {{ house.house_number }}</h2>
 
-        <a class="back-btn" href="{% url 'owner_home' %}">Back</a>
-    </div>
+<table>
+
+<tr>
+<th>Month</th>
+<th>Amount</th>
+<th>Status</th>
+<th>Date Paid</th>
+</tr>
+
+{% for p in payments %}
+
+<tr>
+
+<td>{{ p.month }}</td>
+<td>RM {{ p.amount }}</td>
+
+<td class="paid">
+{{ p.status }}
+</td>
+
+<td>{{ p.date_paid }}</td>
+
+</tr>
+
+{% endfor %}
+
+</table>
+
+<a href="{% url 'owner_home' %}">Back</a>
+
+</div>
+
 </body>
 </html>
