@@ -3,54 +3,89 @@
 <head>
 <title>PERBADANAN PENGURUSAN BLOK B1</title>
 
-<meta name="viewport" content="width=device-width, initial-scale=1.5">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <style>
 
 body{
-font-family:Arial;
+font-family:Arial, sans-serif;
 background:#f4f7fb;
 margin:0;
-padding:20px;
+padding:10px;
 }
 
+/* MAIN BOX */
 .box{
-width:200%;
-max-width:720px;
-margin:50px auto;
+width:100%;
+max-width:420px;
+margin:40px auto;
 background:white;
-padding:50px;
-border-radius:12px;
-box-shadow:0 0 12px rgba(0,0,0,0.1);
+padding:25px;
+border-radius:15px;
+box-shadow:0 4px 15px rgba(0,0,0,0.1);
 }
 
+/* TITLE */
 h2{
 text-align:center;
 color:#1f4e79;
+font-size:22px;
+margin-bottom:20px;
 }
 
+/* LABEL */
+label{
+font-size:16px;
+font-weight:bold;
+}
+
+/* INPUT */
 input{
 width:100%;
-padding:12px;
-margin:8px 0 15px 0;
+padding:14px;
+margin:8px 0 18px 0;
 border:1px solid #ccc;
-border-radius:8px;
-font-size:16px;
+border-radius:10px;
+font-size:18px;
 }
 
+/* BUTTON */
 button{
-width:200%;
-padding:18px;
-margin:12px 0;
+width:100%;
+padding:16px;
+margin-top:10px;
 border:none;
 border-radius:12px;
+background:#1f4e79;
 color:white;
-font-size:30px;
+font-size:20px;
+font-weight:bold;
 }
 
+/* ERROR */
 .error{
 color:red;
 text-align:center;
+margin-top:10px;
+}
+
+/* MOBILE EXTRA BIG */
+@media (max-width:480px){
+
+h2{
+font-size:20px;
+}
+
+input{
+font-size:20px;
+padding:16px;
+}
+
+button{
+font-size:22px;
+padding:18px;
+}
+
 }
 
 </style>
@@ -66,10 +101,10 @@ text-align:center;
 {% csrf_token %}
 
 <label>House Number</label>
-<input type="text" name="house">
+<input type="text" name="house" placeholder="Enter House Number">
 
 <label>Password</label>
-<input type="password" name="password">
+<input type="password" name="password" placeholder="Enter Password">
 
 <button type="submit">Login</button>
 
