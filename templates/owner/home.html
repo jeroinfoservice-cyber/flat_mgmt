@@ -9,91 +9,101 @@
             box-sizing:border-box;
         }
 
-        body {
-            font-family: Arial, sans-serif;
-            background: #1f4e79;
-            margin: 0;
-            min-height: 100vh;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            padding: 16px;
+        body{
+            margin:0;
+            font-family:Arial, sans-serif;
+            background:#1f4e79;
+            min-height:100vh;
+            display:flex;
+            justify-content:center;
+            align-items:center;
+            padding:20px;
         }
 
-        .card {
-            width: 100%;
-            max-width: 430px;
-            background: white;
-            padding: 28px 22px;
-            border-radius: 18px;
-            box-shadow: 0 8px 25px rgba(0,0,0,0.18);
-            text-align: center;
+        .card{
+            width:100%;
+            max-width:580px;
+            background:#ffffff;
+            border-radius:20px;
+            box-shadow:0 8px 24px rgba(0,0,0,0.18);
+            padding:34px 24px;
+            text-align:center;
         }
 
-        h2 {
-            color: #1f4e79;
-            margin: 0 0 12px 0;
-            font-size: 30px;
-            line-height: 1.2;
+        h2{
+            margin:0 0 14px 0;
+            color:#1f4e79;
+            font-size:38px;
+            font-weight:800;
+            line-height:1.2;
         }
 
-        p {
-            margin: 0 0 24px 0;
-            font-size: 21px;
-            color: #222;
+        p{
+            margin:0 0 28px 0;
+            font-size:20px;
+            color:#222;
         }
 
-        a {
-            display: block;
-            width: 100%;
-            text-decoration: none;
-            text-align: center;
-            margin-top: 14px;
-            padding: 18px 14px;
-            border-radius: 12px;
-            color: white;
-            background: #1f4e79;
-            font-size: 21px;
-            font-weight: bold;
+        a{
+            display:block;
+            width:100%;
+            text-decoration:none;
+            color:white;
+            font-size:24px;
+            font-weight:bold;
+            padding:20px;
+            border-radius:14px;
+            margin-top:16px;
         }
 
-        .green {
-            background: #2e8b57;
+        .blue{
+            background:#24598b;
         }
 
-        .gold {
-            background: #c69214;
+        .green{
+            background:#2f9658;
         }
 
-        .red {
-            background: #c62828;
+        .gold{
+            background:#c99710;
         }
 
-        @media (max-width: 480px) {
-            h2 {
-                font-size: 27px;
+        .red{
+            background:#cf2626;
+        }
+
+        @media (max-width:480px){
+            .card{
+                max-width:100%;
+                padding:30px 20px;
             }
 
-            p {
-                font-size: 19px;
+            h2{
+                font-size:28px;
             }
 
-            a {
-                font-size: 20px;
-                padding: 17px 12px;
+            p{
+                font-size:18px;
+            }
+
+            a{
+                font-size:20px;
+                padding:17px;
             }
         }
     </style>
 </head>
 <body>
+
     <div class="card">
         <h2>Welcome {{ house.owner_name }}</h2>
         <p><strong>House Number:</strong> {{ house.house_number }}</p>
 
-        <a href="{% url 'owner_payments' %}">View Payment History</a>
+        <a class="blue" href="{% url 'owner_payments' %}">View Payment History</a>
         <a class="green" href="{% url 'owner_announcements' %}">View Announcements</a>
         <a class="gold" href="{% url 'owner_message' %}">Send Message</a>
         <a class="red" href="{% url 'owner_logout' %}">Logout</a>
     </div>
+
 </body>
 </html>
