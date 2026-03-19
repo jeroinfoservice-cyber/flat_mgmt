@@ -11,7 +11,6 @@
     #header {
         background: #0d2f4f !important;
         color: white !important;
-        box-shadow: 0 4px 12px rgba(0,0,0,0.18);
     }
 
     #site-name a,
@@ -40,99 +39,77 @@
         max-width: 1300px;
         margin: 25px auto 40px auto;
         padding: 24px;
-        background: transparent;
+        background: #123b63;
     }
 
     .dashboard-title {
         text-align: center;
         color: white;
-        margin: 5px 0 8px 0;
-        font-size: 34px;
+        margin: 0 0 8px 0;
+        font-size: 36px;
         font-weight: 700;
     }
 
     .dashboard-subtitle {
         text-align: center;
         color: #d9e8f6;
-        margin: 0 0 22px 0;
+        margin: 0 0 24px 0;
         font-size: 16px;
     }
 
-    .top-controls {
+    .top-bar {
         display: flex;
+        gap: 16px;
+        align-items: end;
         justify-content: space-between;
-        align-items: stretch;
-        gap: 18px;
-        margin-bottom: 24px;
         flex-wrap: wrap;
+        margin-bottom: 24px;
     }
 
-    .month-filter-box,
-    .top-link-box {
+    .month-box,
+    .link-box {
         background: #1b4d7e;
         border-radius: 18px;
-        padding: 20px;
-        box-shadow: 0 8px 22px rgba(0,0,0,0.18);
+        padding: 18px;
+        box-shadow: 0 8px 20px rgba(0,0,0,0.18);
     }
 
-    .month-filter-box {
-        flex: 1;
-        min-width: 300px;
-    }
-
-    .top-link-box {
-        min-width: 260px;
-    }
-
-    .month-filter-box label {
+    .month-box label {
         display: block;
         color: white;
-        font-size: 16px;
         font-weight: 700;
         margin-bottom: 10px;
+        font-size: 16px;
     }
 
-    .month-filter-row {
-        display: flex;
-        gap: 10px;
-        flex-wrap: wrap;
-        align-items: center;
-    }
-
-    .month-filter-box select {
-        min-width: 220px;
+    .month-box select,
+    .month-box button {
         padding: 12px 14px;
         border-radius: 12px;
         border: none;
-        background: white;
-        color: #123b63;
         font-size: 16px;
-        font-weight: 600;
     }
 
-    .month-filter-box button {
-        padding: 12px 18px;
-        border-radius: 12px;
-        border: none;
+    .month-box button {
         background: #0d2f4f;
         color: white;
-        font-size: 15px;
-        font-weight: 700;
+        font-weight: bold;
         cursor: pointer;
+        margin-left: 8px;
     }
 
-    .selected-month-text {
+    .selected-month {
+        color: white;
+        font-size: 18px;
+        font-weight: 700;
         margin-top: 12px;
-        color: #dceaf8;
-        font-size: 16px;
-        font-weight: 600;
     }
 
     .summary-grid {
         display: grid;
         grid-template-columns: repeat(6, 1fr);
-        gap: 18px;
-        margin-bottom: 24px;
+        gap: 16px;
+        margin-bottom: 28px;
     }
 
     .summary-card {
@@ -140,8 +117,7 @@
         border-radius: 18px;
         padding: 22px;
         text-align: center;
-        box-shadow: 0 8px 20px rgba(0,0,0,0.16);
-        border: 1px solid rgba(255,255,255,0.08);
+        box-shadow: 0 8px 20px rgba(0,0,0,0.18);
     }
 
     .summary-card h3 {
@@ -172,12 +148,7 @@
         color: white !important;
         padding: 18px;
         border-radius: 16px;
-        box-shadow: 0 8px 18px rgba(0,0,0,0.16);
-        transition: transform 0.15s ease;
-    }
-
-    .quick-link:hover {
-        transform: translateY(-2px);
+        box-shadow: 0 8px 20px rgba(0,0,0,0.18);
     }
 
     .quick-link h4 {
@@ -196,14 +167,14 @@
         color: white;
         font-size: 24px;
         font-weight: 700;
-        margin: 10px 0 14px 0;
+        margin: 18px 0 14px 0;
     }
 
-    .table-wrap {
+    .status-table-wrap {
         background: #1b4d7e;
         border-radius: 18px;
         overflow: hidden;
-        box-shadow: 0 8px 20px rgba(0,0,0,0.16);
+        box-shadow: 0 8px 20px rgba(0,0,0,0.18);
         margin-bottom: 28px;
     }
 
@@ -217,7 +188,6 @@
         color: white;
         padding: 14px;
         text-align: center;
-        font-size: 15px;
     }
 
     .status-table tbody td {
@@ -225,35 +195,41 @@
         text-align: center;
         border-bottom: 1px solid rgba(255,255,255,0.08);
         color: white;
-        font-size: 15px;
     }
 
     .status-paid {
-        color: #67f09a;
+        color: #56e38a;
         font-weight: 700;
     }
 
     .status-unpaid {
-        color: #ff8c8c;
+        color: #ff7d7d;
         font-weight: 700;
+    }
+
+    .expense-table-wrap {
+        background: #1b4d7e;
+        border-radius: 18px;
+        overflow: hidden;
+        box-shadow: 0 8px 20px rgba(0,0,0,0.18);
+        margin-bottom: 28px;
     }
 
     .expense-link {
         color: #9ed0ff !important;
-        font-weight: 700;
+        font-weight: bold;
         text-decoration: none;
     }
 
     .empty-note {
-        text-align: center;
-        color: #dceaf8;
+        color: #dbe8f5;
         padding: 18px;
-        font-size: 15px;
+        text-align: center;
     }
 
-    @media (max-width: 1200px) {
+    @media (max-width: 1100px) {
         .summary-grid {
-            grid-template-columns: repeat(3, 1fr);
+            grid-template-columns: repeat(2, 1fr);
         }
 
         .quick-links {
@@ -261,44 +237,23 @@
         }
     }
 
-    @media (max-width: 900px) {
-        .summary-grid {
-            grid-template-columns: repeat(2, 1fr);
-        }
-
-        .dashboard-wrapper {
-            margin: 15px;
-            padding: 18px;
-        }
-
-        .dashboard-title {
-            font-size: 28px;
-        }
-    }
-
-    @media (max-width: 600px) {
+    @media (max-width: 700px) {
         .summary-grid,
         .quick-links {
             grid-template-columns: 1fr;
         }
 
-        .month-filter-row {
-            flex-direction: column;
-            align-items: stretch;
+        .dashboard-wrapper {
+            margin: 12px;
+            padding: 14px;
         }
 
-        .month-filter-box select,
-        .month-filter-box button {
-            width: 100%;
+        .dashboard-title {
+            font-size: 28px;
         }
 
         .status-table {
-            font-size: 13px;
-        }
-
-        .status-table thead th,
-        .status-table tbody td {
-            padding: 10px 8px;
+            font-size: 14px;
         }
     }
 </style>
@@ -307,32 +262,28 @@
 {% block content %}
 <div class="dashboard-wrapper">
     <h1 class="dashboard-title">PERBADANAN PENGURUSAN BLOK B1</h1>
-    <p class="dashboard-subtitle">Management overview, monthly payment status, and expenses</p>
+    <p class="dashboard-subtitle">Dark blue management dashboard</p>
 
-    <div class="top-controls">
-        <div class="month-filter-box">
+    <div class="top-bar">
+        <div class="month-box">
             <form method="get">
                 <label for="month">Select Month</label>
-                <div class="month-filter-row">
-                    <select name="month" id="month">
-                        {% for m in available_months %}
-                            <option value="{{ m|date:'Y-m' }}" {% if selected_month == m|date:'Y-m' %}selected{% endif %}>
-                                {{ m|date:"F Y" }}
-                            </option>
-                        {% endfor %}
-                    </select>
-                    <button type="submit">Show</button>
-                </div>
+                <select name="month" id="month">
+                    {% for m in available_months %}
+                        <option value="{{ m|date:'Y-m' }}" {% if selected_month == m|date:'Y-m' %}selected{% endif %}>
+                            {{ m|date:"F Y" }}
+                        </option>
+                    {% endfor %}
+                </select>
+                <button type="submit">Show</button>
             </form>
-            <div class="selected-month-text">
-                Showing data for: {{ selected_month_label }}
-            </div>
+            <div class="selected-month">Showing: {{ selected_month_label }}</div>
         </div>
 
-        <div class="top-link-box">
-            <a class="quick-link" href="/admin/flats/expense/add/">
-                <h4>Add Expense</h4>
-                <p>Add maintenance, repair, cleaning, utility, or other expenses.</p>
+        <div class="link-box">
+            <a class="quick-link" href="/admin/flats/house/">
+                <h4>Manage Houses</h4>
+                <p>Add or edit house and monthly fee</p>
             </a>
         </div>
     </div>
@@ -377,39 +328,39 @@
     <div class="quick-links">
         <a class="quick-link" href="/admin/flats/house/">
             <h4>Manage Houses</h4>
-            <p>Add and edit owner and house details.</p>
+            <p>Add and edit owner details</p>
         </a>
 
         <a class="quick-link" href="/admin/flats/payment/">
             <h4>Manage Payments</h4>
-            <p>Update month, amount, and paid status.</p>
+            <p>Update payment month and status</p>
         </a>
 
         <a class="quick-link" href="/admin/flats/expense/">
             <h4>Manage Expenses</h4>
-            <p>View and update maintenance and other expenses.</p>
+            <p>Add maintenance and other expenses</p>
         </a>
 
         <a class="quick-link" href="/admin/flats/message/">
             <h4>View Messages</h4>
-            <p>Read owner complaints and messages.</p>
+            <p>Read owner messages</p>
         </a>
 
         <a class="quick-link" href="/admin/flats/announcement/">
             <h4>Announcements</h4>
-            <p>Post management and maintenance notices.</p>
+            <p>Post management notices</p>
         </a>
     </div>
 
     <h2 class="section-title">{{ selected_month_label }} House Payment Status</h2>
 
-    <div class="table-wrap">
+    <div class="status-table-wrap">
         <table class="status-table">
             <thead>
                 <tr>
                     <th>House Number</th>
                     <th>Owner</th>
-                    <th>Amount Due</th>
+                    <th>Monthly Fee</th>
                     <th>Paid Amount</th>
                     <th>Status</th>
                 </tr>
@@ -419,7 +370,7 @@
                 <tr>
                     <td>{{ item.house }}</td>
                     <td>{{ item.owner_name }}</td>
-                    <td>RM {{ item.amount_due }}</td>
+                    <td>RM {{ item.monthly_fee }}</td>
                     <td>RM {{ item.paid_amount }}</td>
                     <td>
                         {% if item.status == "Paid" %}
@@ -429,10 +380,6 @@
                         {% endif %}
                     </td>
                 </tr>
-                {% empty %}
-                <tr>
-                    <td colspan="5" class="empty-note">No house records found.</td>
-                </tr>
                 {% endfor %}
             </tbody>
         </table>
@@ -440,20 +387,22 @@
 
     <h2 class="section-title">{{ selected_month_label }} Expense Details</h2>
 
-    <div class="table-wrap">
+    <div class="expense-table-wrap">
         <table class="status-table">
             <thead>
                 <tr>
                     <th>Title</th>
+                    <th>Category</th>
                     <th>Amount</th>
                     <th>Details</th>
-                    <th>Edit</th>
+                    <th>Admin Edit</th>
                 </tr>
             </thead>
             <tbody>
                 {% for expense in month_expenses %}
                 <tr>
                     <td>{{ expense.title }}</td>
+                    <td>{{ expense.category }}</td>
                     <td>RM {{ expense.amount }}</td>
                     <td>{{ expense.details|default:"-" }}</td>
                     <td>
@@ -464,13 +413,11 @@
                 </tr>
                 {% empty %}
                 <tr>
-                    <td colspan="4" class="empty-note">No expenses found for this month.</td>
+                    <td colspan="5" class="empty-note">No expenses found for this month.</td>
                 </tr>
                 {% endfor %}
             </tbody>
         </table>
     </div>
-
-    {{ block.super }}
 </div>
 {% endblock %}

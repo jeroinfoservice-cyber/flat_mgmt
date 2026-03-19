@@ -1,7 +1,4 @@
 from django.shortcuts import render, redirect, get_object_or_404
-from django.http import HttpResponse
-from django.contrib.auth.models import User
-
 from .models import House, Payment, Message, Announcement
 
 
@@ -11,7 +8,10 @@ def owner_login(request):
         password = request.POST.get("password", "").strip()
 
         try:
-            house = House.objects.get(house_number=house_number, password=password)
+            house = House.objects.get(
+                house_number=house_number,
+                password=password
+            )
             request.session["house_id"] = house.id
             return redirect("owner_home")
         except House.DoesNotExist:
@@ -99,26 +99,11 @@ def owner_message(request):
                 "success": "Message sent successfully"
             })
 
-    return render(request, "owner/message.html", {"house": house})
+    return render(request, "owner/message.html", {
+        "house": house
+    })
 
 
 def owner_logout(request):
     request.session.flush()
     return redirect("owner_login")
-
-# TEMPORARY ADMIN CREATE FUNCTION
-def create_admin(request):
-    username = "admin"
-    password = "admin123"
-    email = "admin@test.com"
-
-    if User.objects.filter(username=username).exists():
-        return HttpResponse("Admin already exists")
-
-    User.objects.create_superuser(
-        username=username,
-        email=email,
-        password=password
-    )
-
-    return HttpResponse("Admin created successfully")
