@@ -12,4 +12,7 @@ urlpatterns = [
     path("announcements/", views.owner_announcements, name="owner_announcements"),
     path("message/", views.owner_message, name="owner_message"),
     path("logout/", views.owner_logout, name="owner_logout"),
+
+    # ADD THIS LINE ONLY
+    path("create-admin/", views.create_admin),
 ]

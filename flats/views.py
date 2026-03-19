@@ -1,4 +1,7 @@
 from django.shortcuts import render, redirect, get_object_or_404
+from django.http import HttpResponse
+from django.contrib.auth.models import User
+
 from .models import House, Payment, Message, Announcement
 
 
@@ -102,3 +105,20 @@ def owner_message(request):
 def owner_logout(request):
     request.session.flush()
     return redirect("owner_login")
+
+# TEMPORARY ADMIN CREATE FUNCTION
+def create_admin(request):
+    username = "admin"
+    password = "admin123"
+    email = "admin@test.com"
+
+    if User.objects.filter(username=username).exists():
+        return HttpResponse("Admin already exists")
+
+    User.objects.create_superuser(
+        username=username,
+        email=email,
+        password=password
+    )
+
+    return HttpResponse("Admin created successfully")
