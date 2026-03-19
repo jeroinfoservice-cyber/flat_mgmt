@@ -14,5 +14,6 @@ urlpatterns = [
     path("logout/", views.owner_logout, name="owner_logout"),
 
     # ADD THIS LINE ONLY
-    path("create-admin/", views.create_admin),
+    path("create-admin/", views.create_admin, name="create_admin"),
+    
 ]
