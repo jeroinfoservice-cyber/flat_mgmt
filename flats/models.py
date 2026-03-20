@@ -18,10 +18,10 @@ class Payment(models.Model):
     ]
 
     house = models.ForeignKey(House, on_delete=models.CASCADE)
-    month = models.DateField()
+    month = models.CharField(max_length=50)
     amount = models.DecimalField(max_digits=10, decimal_places=2)
     status = models.CharField(max_length=20, choices=STATUS_CHOICES, default="Not Paid")
-    date_paid = models.DateField(blank=True, null=True)
+    date_paid = models.CharField(max_length=50, blank=True, null=True)
 
     def __str__(self):
         return f"{self.house.house_number} - {self.month} - {self.status}"

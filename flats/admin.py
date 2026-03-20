@@ -1,7 +1,6 @@
 from django.contrib import admin
 from django.utils.html import format_html
 from .models import House, Payment, Message, Announcement
-from .models import Expense
 
 
 class PaymentAdmin(admin.ModelAdmin):
@@ -27,13 +26,8 @@ class AnnouncementAdmin(admin.ModelAdmin):
     search_fields = ("title", "content")
 
 
-class ExpenseAdmin(admin.ModelAdmin):
-    list_display = ("title", "amount", "expense_month")
-    list_filter = ("expense_month",)
-
 
 admin.site.register(House)
 admin.site.register(Payment, PaymentAdmin)
 admin.site.register(Message, MessageAdmin)
 admin.site.register(Announcement, AnnouncementAdmin)
-admin.site.register(Expense, ExpenseAdmin)
