@@ -5,6 +5,7 @@ class House(models.Model):
     house_number = models.CharField(max_length=20, unique=True)
     owner_name = models.CharField(max_length=100)
     password = models.CharField(max_length=100)
+    monthly_fee = models.DecimalField(max_digits=10, decimal_places=2, default=0)
 
     def __str__(self):
         return f"{self.house_number} - {self.owner_name}"
@@ -42,3 +43,12 @@ class Announcement(models.Model):
 
     def __str__(self):
         return self.title
+    
+class Expense(models.Model):
+    title = models.CharField(max_length=200)
+    amount = models.DecimalField(max_digits=10, decimal_places=2)
+    expense_month = models.DateField()
+    description = models.TextField(blank=True)
+
+    def __str__(self):
+        return f"{self.title} - {self.expense_month}"
