@@ -5,7 +5,6 @@ class House(models.Model):
     house_number = models.CharField(max_length=20, unique=True)
     owner_name = models.CharField(max_length=100)
     password = models.CharField(max_length=100)
-    monthly_fee = models.DecimalField(max_digits=10, decimal_places=2, default=0)
 
     def __str__(self):
         return f"{self.house_number} - {self.owner_name}"

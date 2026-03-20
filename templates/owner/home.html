@@ -22,7 +22,7 @@
 
         .card{
             width:100%;
-            max-width:580px;
+            max-width:540px;
             background:#ffffff;
             border-radius:20px;
             box-shadow:0 8px 24px rgba(0,0,0,0.18);
@@ -33,13 +33,13 @@
         h2{
             margin:0 0 14px 0;
             color:#1f4e79;
-            font-size:38px;
+            font-size:34px;
             font-weight:800;
             line-height:1.2;
         }
 
         p{
-            margin:0 0 28px 0;
+            margin:0 0 18px 0;
             font-size:20px;
             color:#222;
         }
@@ -49,28 +49,17 @@
             width:100%;
             text-decoration:none;
             color:white;
-            font-size:24px;
+            font-size:22px;
             font-weight:bold;
-            padding:20px;
+            padding:18px;
             border-radius:14px;
             margin-top:16px;
         }
 
-        .blue{
-            background:#24598b;
-        }
-
-        .green{
-            background:#2f9658;
-        }
-
-        .gold{
-            background:#c99710;
-        }
-
-        .red{
-            background:#cf2626;
-        }
+        .blue{ background:#24598b; }
+        .green{ background:#2f9658; }
+        .gold{ background:#c99710; }
+        .red{ background:#cf2626; }
 
         @media (max-width:480px){
             .card{
@@ -78,13 +67,8 @@
                 padding:30px 20px;
             }
 
-            h2{
-                font-size:28px;
-            }
-
-            p{
-                font-size:18px;
-            }
+            h2{ font-size:28px; }
+            p{ font-size:18px; }
 
             a{
                 font-size:20px;
@@ -98,6 +82,7 @@
     <div class="card">
         <h2>Welcome {{ house.owner_name }}</h2>
         <p><strong>House Number:</strong> {{ house.house_number }}</p>
+        <p><strong>Status:</strong> {{ current_status }}</p>
 
         <a class="blue" href="{% url 'owner_payments' %}">View Payment History</a>
         <a class="green" href="{% url 'owner_announcements' %}">View Announcements</a>

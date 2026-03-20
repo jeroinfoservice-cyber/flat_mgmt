@@ -1,69 +1,58 @@
 <!DOCTYPE html>
 <html>
 <head>
-<title>Announcements</title>
+    <title>Receipt</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        body{
+            font-family:Arial, sans-serif;
+            background:#f4f7fb;
+            margin:0;
+            padding:20px;
+        }
 
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+        .box{
+            max-width:600px;
+            margin:0 auto;
+            background:white;
+            border-radius:16px;
+            padding:24px;
+            box-shadow:0 0 12px rgba(0,0,0,0.08);
+        }
 
-<style>
+        h2{
+            text-align:center;
+            color:#1f4e79;
+        }
 
-body{
-font-family:Arial;
-background:#f4f7fb;
-margin:0;
-padding:20px;
-}
+        p{
+            font-size:18px;
+            margin:14px 0;
+        }
 
-.card{
-max-width:600px;
-margin:auto;
-background:white;
-padding:20px;
-border-radius:15px;
-box-shadow:0 0 12px rgba(0,0,0,0.08);
-}
-
-.announcement{
-background:#eef5ff;
-padding:15px;
-border-radius:10px;
-margin-bottom:10px;
-}
-
-a{
-display:block;
-margin-top:15px;
-text-align:center;
-background:#1f4e79;
-color:white;
-padding:10px;
-border-radius:8px;
-text-decoration:none;
-}
-
-</style>
+        a{
+            display:inline-block;
+            margin-top:20px;
+            padding:12px 18px;
+            background:#1f4e79;
+            color:white;
+            text-decoration:none;
+            border-radius:10px;
+        }
+    </style>
 </head>
-
 <body>
+    <div class="box">
+        <h2>Payment Receipt</h2>
 
-<div class="card">
+        <p><strong>House Number:</strong> {{ house.house_number }}</p>
+        <p><strong>Owner Name:</strong> {{ house.owner_name }}</p>
+        <p><strong>Month:</strong> {{ payment.month }}</p>
+        <p><strong>Amount:</strong> RM {{ payment.amount }}</p>
+        <p><strong>Status:</strong> {{ payment.status }}</p>
+        <p><strong>Date Paid:</strong> {{ payment.date_paid|default:"-" }}</p>
 
-<h2>Announcements</h2>
-
-{% for a in announcements %}
-
-<div class="announcement">
-
-<p>{{ a.message }}</p>
-<small>{{ a.created_at }}</small>
-
-</div>
-
-{% endfor %}
-
-<a href="{% url 'owner_home' %}">Back</a>
-
-</div>
-
+        <a href="{% url 'owner_payments' %}">Back to Payments</a>
+    </div>
 </body>
 </html>
