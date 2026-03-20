@@ -18,13 +18,13 @@ class Payment(models.Model):
     ]
 
     house = models.ForeignKey(House, on_delete=models.CASCADE)
-    month = models.DateField(help_text="Use first day of month, example: 2026-03-01")
+    month = models.DateField()
     amount = models.DecimalField(max_digits=10, decimal_places=2)
     status = models.CharField(max_length=20, choices=STATUS_CHOICES, default="Not Paid")
     date_paid = models.DateField(blank=True, null=True)
 
     def __str__(self):
-        return f"{self.house.house_number} - {self.month.strftime('%B %Y')} - {self.status}"
+        return f"{self.house.house_number} - {self.month} - {self.status}"
 
 
 class Message(models.Model):
@@ -43,24 +43,3 @@ class Announcement(models.Model):
 
     def __str__(self):
         return self.title
-
-
-class Expense(models.Model):
-    CATEGORY_CHOICES = [
-        ("Maintenance", "Maintenance"),
-        ("Cleaning", "Cleaning"),
-        ("Repair", "Repair"),
-        ("Security", "Security"),
-        ("Utility", "Utility"),
-        ("Other", "Other"),
-    ]
-
-    title = models.CharField(max_length=200)
-    category = models.CharField(max_length=30, choices=CATEGORY_CHOICES, default="Maintenance")
-    amount = models.DecimalField(max_digits=10, decimal_places=2)
-    expense_month = models.DateField(help_text="Use first day of month, example: 2026-03-01")
-    details = models.TextField(blank=True, null=True)
-    created_at = models.DateTimeField(auto_now_add=True)
-
-    def __str__(self):
-        return f"{self.title} - {self.expense_month.strftime('%b %Y')}"

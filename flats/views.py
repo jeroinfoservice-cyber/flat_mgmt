@@ -8,10 +8,7 @@ def owner_login(request):
         password = request.POST.get("password", "").strip()
 
         try:
-            house = House.objects.get(
-                house_number=house_number,
-                password=password
-            )
+            house = House.objects.get(house_number=house_number, password=password)
             request.session["house_id"] = house.id
             return redirect("owner_home")
         except House.DoesNotExist:
@@ -99,9 +96,7 @@ def owner_message(request):
                 "success": "Message sent successfully"
             })
 
-    return render(request, "owner/message.html", {
-        "house": house
-    })
+    return render(request, "owner/message.html", {"house": house})
 
 
 def owner_logout(request):
