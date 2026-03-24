@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Announcements</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #f4f7fb;
+            margin: 0;
+            padding: 20px;
+        }
+        .card {
+            max-width: 700px;
+            margin: auto;
+            background: white;
+            padding: 20px;
+            border-radius: 15px;
+            box-shadow: 0 0 12px rgba(0,0,0,0.08);
+        }
+        .announcement {
+            background: #eef5ff;
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 12px;
+        }
+        a {
+            display: block;
+            margin-top: 15px;
+            text-align: center;
+            background: #1f4e79;
+            color: white;
+            padding: 10px;
+            border-radius: 8px;
+            text-decoration: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="card">
+        <h2>{{ flat.name|default:"PERBADANAN PENGURUSAN BLOK B1" }}</h2>
+        <h3>Announcements</h3>
+
+        {% for a in announcements %}
+        <div class="announcement">
+            <strong>{{ a.title }}</strong>
+            <p>{{ a.content }}</p>
+            <small>{{ a.created_at }}</small>
+        </div>
+        {% empty %}
+        <p>No announcements yet.</p>
+        {% endfor %}
+
+        <a href="{% url 'owner_home' %}">Back</a>
+    </div>
+</body>
+</html>

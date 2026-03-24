@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Payment History</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #f4f7fb;
+            margin: 0;
+            padding: 20px;
+        }
+        .card {
+            max-width: 900px;
+            margin: auto;
+            background: white;
+            padding: 20px;
+            border-radius: 15px;
+            box-shadow: 0 0 12px rgba(0,0,0,0.08);
+        }
+        h2 { color: #1f4e79; }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 15px;
+        }
+        th, td {
+            padding: 10px;
+            border-bottom: 1px solid #ddd;
+            text-align: center;
+        }
+        th {
+            background: #1f4e79;
+            color: white;
+        }
+        .paid { color: green; font-weight: bold; }
+        .notpaid { color: red; font-weight: bold; }
+        .btn, .back {
+            display: inline-block;
+            text-decoration: none;
+            background: #1f4e79;
+            color: white;
+            padding: 8px 12px;
+            border-radius: 8px;
+        }
+        .back {
+            display: block;
+            margin-top: 15px;
+            text-align: center;
+            padding: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="card">
+        <h2>{{ flat.name|default:"PERBADANAN PENGURUSAN BLOK B1" }}</h2>
+        <h3>Payment History - {{ house.house_number }}</h3>
+
+        <table>
+            <tr>
+                <th>Month</th>
+                <th>Amount</th>
+                <th>Status</th>
+                <th>Date Paid</th>
+                <th>Receipt</th>
+            </tr>
+
+            {% for p in payments %}
+            <tr>
+                <td>{{ p.month }}</td>
+                <td>RM {{ p.amount }}</td>
+                <td>
+                    {% if p.status == "Paid" %}
+                        <span class="paid">Paid</span>
+                    {% else %}
+                        <span class="notpaid">Not Paid</span>
+                    {% endif %}
+                </td>
+                <td>{{ p.date_paid }}</td>
+                <td>
+                    {% if p.status == "Paid" %}
+                        <a class="btn" href="{% url 'owner_receipt' p.id %}">View Receipt</a>
+                    {% else %}
+                        -
+                    {% endif %}
+                </td>
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="5">No payment records found.</td>
+            </tr>
+            {% endfor %}
+        </table>
+
+        <a class="back" href="{% url 'owner_home' %}">Back</a>
+    </div>
+</body>
+</html

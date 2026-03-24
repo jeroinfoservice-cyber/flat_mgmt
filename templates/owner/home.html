@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Owner Home</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #f4f7fb;
+            margin: 0;
+            padding: 20px;
+        }
+        .card {
+            width: 100%;
+            max-width: 500px;
+            margin: 20px auto;
+            background: white;
+            padding: 22px;
+            border-radius: 16px;
+            box-shadow: 0 0 12px rgba(0,0,0,0.08);
+            box-sizing: border-box;
+        }
+        h2 {
+            color: #1f4e79;
+            margin-top: 0;
+            margin-bottom: 10px;
+            font-size: 26px;
+        }
+        p {
+            margin: 0 0 18px 0;
+            font-size: 18px;
+        }
+        a {
+            display: block;
+            width: 100%;
+            text-decoration: none;
+            text-align: center;
+            margin-top: 12px;
+            padding: 14px 12px;
+            border-radius: 10px;
+            color: white;
+            background: #1f4e79;
+            font-size: 17px;
+            font-weight: bold;
+            box-sizing: border-box;
+        }
+        .green { background: #2e8b57; }
+        .gold { background: #b8860b; }
+        .red { background: #b22222; }
+    </style>
+</head>
+<body>
+    <div class="card">
+        <h2>{{ flat.name|default:"PERBADANAN PENGURUSAN BLOK B1" }}</h2>
+        <p><strong>Owner:</strong> {{ house.owner_name }}</p>
+        <p><strong>House Number:</strong> {{ house.house_number }}</p>
+
+        <a href="{% url 'owner_payments' %}">View Payment History</a>
+        <a class="green" href="{% url 'owner_announcements' %}">View Announcements</a>
+        <a class="gold" href="{% url 'owner_message' %}">Send Message</a>
+        <a class="red" href="{% url 'owner_logout' %}">Logout</a>
+    </div>
+</body>
+</html>

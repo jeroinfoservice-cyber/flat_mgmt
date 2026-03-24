@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Send Message</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #f4f7fb;
+            margin: 0;
+            padding: 20px;
+        }
+        .card {
+            max-width: 500px;
+            margin: auto;
+            background: white;
+            padding: 20px;
+            border-radius: 15px;
+            box-shadow: 0 0 12px rgba(0,0,0,0.08);
+        }
+        textarea {
+            width: 100%;
+            height: 120px;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            font-size: 16px;
+            box-sizing: border-box;
+        }
+        button {
+            width: 100%;
+            padding: 12px;
+            margin-top: 10px;
+            background: #b8860b;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+        }
+        .success {
+            color: green;
+            text-align: center;
+        }
+        a {
+            display: block;
+            margin-top: 15px;
+            text-align: center;
+            background: #1f4e79;
+            color: white;
+            padding: 10px;
+            border-radius: 8px;
+            text-decoration: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="card">
+        <h2>{{ flat.name|default:"PERBADANAN PENGURUSAN BLOK B1" }}</h2>
+        <h3>Send Message</h3>
+
+        <form method="post">
+            {% csrf_token %}
+            <textarea name="message_text" placeholder="Type your message here"></textarea>
+            <button type="submit">Send Message</button>
+        </form>
+
+        <p class="success">{{ success }}</p>
+
+        <a href="{% url 'owner_home' %}">Back</a>
+    </div>
+</body>
+</html>
