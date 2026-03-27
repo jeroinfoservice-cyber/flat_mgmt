@@ -1,0 +1,149 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Admin Login</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: url("{% static 'images/bg.jpg' %}") no-repeat center center fixed;
+            background-size: cover;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            animation: zoomBg 20s ease-in-out infinite alternate;
+            position: relative;
+        }
+
+        body::before {
+            content: "";
+            position: fixed;
+            inset: 0;
+            background: linear-gradient(
+                rgba(6, 22, 52, 0.80),
+                rgba(10, 31, 68, 0.78)
+            );
+            z-index: 1;
+        }
+
+        @keyframes zoomBg {
+            0% { background-size: 100%; }
+            100% { background-size: 110%; }
+        }
+
+        .login-card {
+            position: relative;
+            z-index: 2;
+            width: 92%;
+            max-width: 430px;
+            background: rgba(255, 255, 255, 0.96);
+            border-radius: 18px;
+            padding: 34px 28px;
+            box-shadow: 0 16px 40px rgba(0, 0, 0, 0.28);
+        }
+
+        .title {
+            margin: 0 0 10px 0;
+            text-align: center;
+            color: #0A1F44;
+            font-size: 31px;
+            line-height: 1.25;
+            font-weight: bold;
+        }
+
+        .subtitle {
+            text-align: center;
+            color: #5e6a7d;
+            font-size: 15px;
+            margin-bottom: 24px;
+        }
+
+        .errornote {
+            color: #b00020;
+            background: #fff2f2;
+            border: 1px solid #f0b4b4;
+            padding: 12px;
+            border-radius: 10px;
+            margin-bottom: 14px;
+            text-align: center;
+            font-size: 14px;
+        }
+
+        label {
+            display: block;
+            margin: 10px 0 6px;
+            color: #0A1F44;
+            font-weight: bold;
+            text-align: left;
+        }
+
+        input {
+            width: 100%;
+            padding: 13px 14px;
+            border: 1px solid #d7deea;
+            border-radius: 10px;
+            font-size: 15px;
+            background: #f9fbff;
+            outline: none;
+            transition: 0.2s;
+        }
+
+        input:focus {
+            border-color: #1f4e79;
+            box-shadow: 0 0 0 3px rgba(31, 78, 121, 0.12);
+            background: white;
+        }
+
+        button {
+            width: 100%;
+            margin-top: 18px;
+            padding: 13px;
+            border: none;
+            border-radius: 10px;
+            background: linear-gradient(135deg, #f4c542, #e2af15);
+            color: #0A1F44;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: 0.2s ease;
+        }
+
+        button:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 8px 18px rgba(226, 175, 21, 0.35);
+        }
+    </style>
+</head>
+<body>
+
+<div class="login-card">
+    <h1 class="title">Welcome to<br>PERBADANAN PENGURUSAN BLOK B1</h1>
+    <div class="subtitle">Management Admin Login</div>
+
+    {% if form.errors %}
+        <div class="errornote">Invalid username or password</div>
+    {% endif %}
+
+    <form method="post">
+        {% csrf_token %}
+
+        <label>Username</label>
+        <input type="text" name="username" placeholder="Enter username" required>
+
+        <label>Password</label>
+        <input type="password" name="password" placeholder="Enter password" required>
+
+        <button type="submit">Log in</button>
+    </form>
+</div>
+
+</body>
+</html>
