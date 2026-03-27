@@ -1,33 +1,21 @@
 {% extends "admin/base_site.html" %}
 
-{% load static %}
-
 {% block extrastyle %}
 {{ block.super }}
 <style>
     body {
-        background: url("{% static 'images/bg.jpg' %}") no-repeat center center fixed;
-        background-size: cover;
-    }
-
-    body::before {
-        content: "";
-        position: fixed;
-        inset: 0;
-        background: rgba(8, 24, 53, 0.83);
-        z-index: -1;
+        background: linear-gradient(135deg, #000b24, #001c4e, #05255f);
     }
 
     #header {
-        background: rgba(10, 31, 68, 0.96);
-        color: white;
+        background: #001437 !important;
     }
 
     #branding h1,
     #branding h1 a:link,
     #branding h1 a:visited {
         color: #f4c542 !important;
-        font-size: 30px;
+        font-size: 28px;
         font-weight: bold;
     }
 
@@ -55,16 +43,16 @@
         max-width: 1280px;
         margin: 28px auto 40px auto;
         padding: 26px;
-        background: rgba(255, 255, 255, 0.96);
+        background: rgba(255,255,255,0.96);
         border-radius: 22px;
-        box-shadow: 0 16px 40px rgba(0, 0, 0, 0.22);
+        box-shadow: 0 16px 40px rgba(0,0,0,0.22);
     }
 
     .dashboard-title {
         text-align: center;
-        color: #0A1F44;
+        color: #001437;
         margin: 0;
-        font-size: 38px;
+        font-size: 36px;
         font-weight: 700;
     }
 
@@ -108,54 +96,20 @@
     .red p { color: #d32027; }
     .gold p { color: #d39d00; }
 
-    .quick-links {
-        display: grid;
-        grid-template-columns: repeat(4, 1fr);
-        gap: 16px;
-        margin-bottom: 28px;
-    }
-
-    .quick-link {
-        display: block;
-        text-decoration: none !important;
-        background: linear-gradient(135deg, #0A1F44, #204f7f);
-        color: white !important;
-        padding: 18px;
-        border-radius: 18px;
-        box-shadow: 0 10px 20px rgba(10,31,68,0.15);
-        transition: 0.2s ease;
-    }
-
-    .quick-link:hover {
-        transform: translateY(-2px);
-    }
-
-    .quick-link h4 {
-        margin: 0 0 8px;
-        color: #f4c542;
-        font-size: 18px;
-    }
-
-    .quick-link p {
-        margin: 0;
-        color: rgba(255,255,255,0.92);
-        font-size: 14px;
-        line-height: 1.5;
-    }
-
     .section-title {
-        color: #0A1F44;
-        font-size: 25px;
+        color: #001437;
+        font-size: 24px;
         font-weight: bold;
-        margin: 18px 0 14px 0;
+        margin: 20px 0 14px 0;
     }
 
+    .chart-card,
     .status-table-wrap {
         background: white;
         border-radius: 18px;
-        overflow: hidden;
+        padding: 18px;
         box-shadow: 0 8px 18px rgba(0,0,0,0.07);
-        margin-bottom: 26px;
+        margin-bottom: 24px;
     }
 
     .status-table {
@@ -164,7 +118,7 @@
     }
 
     .status-table thead th {
-        background: #0A1F44;
+        background: #001437;
         color: white;
         padding: 14px;
         text-align: center;
@@ -186,15 +140,55 @@
         font-weight: bold;
     }
 
-    .module h2,
-    .module caption,
-    .inline-group h2 {
-        background: #0A1F44 !important;
+    .popup-overlay {
+        position: fixed;
+        inset: 0;
+        background: rgba(0,0,0,0.45);
+        display: none;
+        justify-content: center;
+        align-items: center;
+        z-index: 9999;
+    }
+
+    .popup-box {
+        width: 92%;
+        max-width: 420px;
+        background: white;
+        border-radius: 18px;
+        padding: 24px;
+        box-shadow: 0 18px 40px rgba(0,0,0,0.28);
+        animation: popupIn 0.3s ease;
+    }
+
+    .popup-box h3 {
+        margin-top: 0;
+        color: #001437;
+        font-size: 24px;
+    }
+
+    .popup-box p {
+        color: #4b5c77;
+        line-height: 1.6;
+    }
+
+    .popup-close {
+        margin-top: 14px;
+        padding: 10px 16px;
+        border: none;
+        border-radius: 10px;
+        background: linear-gradient(135deg, #f4c542, #dba400);
+        color: #001437;
+        font-weight: bold;
+        cursor: pointer;
+    }
+
+    @keyframes popupIn {
+        from { transform: scale(0.9); opacity: 0; }
+        to { transform: scale(1); opacity: 1; }
     }
 
     @media (max-width: 992px) {
-        .summary-grid,
-        .quick-links {
+        .summary-grid {
             grid-template-columns: 1fr;
         }
 
@@ -204,7 +198,7 @@
         }
 
         .dashboard-title {
-            font-size: 30px;
+            font-size: 29px;
         }
     }
 </style>
@@ -251,30 +245,12 @@
         </div>
     </div>
 
-    <div class="quick-links">
-        <a class="quick-link" href="/admin/flats/house/">
-            <h4>Manage Houses</h4>
-            <p>Add and update owner details and passwords.</p>
-        </a>
-
-        <a class="quick-link" href="/admin/flats/payment/">
-            <h4>Manage Payments</h4>
-            <p>Update paid and unpaid monthly maintenance records.</p>
-        </a>
-
-        <a class="quick-link" href="/admin/flats/message/">
-            <h4>Owner Messages</h4>
-            <p>Read questions, requests and complaints from owners.</p>
-        </a>
-
-        <a class="quick-link" href="/admin/flats/announcement/">
-            <h4>Announcements</h4>
-            <p>Post notices, updates and maintenance information.</p>
-        </a>
+    <h2 class="section-title">Collection Graph</h2>
+    <div class="chart-card">
+        <canvas id="collectionChart" height="110"></canvas>
     </div>
 
     <h2 class="section-title">Current House Payment Status</h2>
-
     <div class="status-table-wrap">
         <table class="status-table">
             <thead>
@@ -302,4 +278,65 @@
 
     {{ block.super }}
 </div>
+
+<div class="popup-overlay" id="notifyPopup">
+    <div class="popup-box">
+        <h3>{{ popup_title }}</h3>
+        <p>{{ popup_message }}</p>
+        <button class="popup-close" onclick="closePopup()">Close</button>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+    const labels = {{ chart_labels|safe }};
+    const values = {{ chart_values|safe }};
+
+    const ctx = document.getElementById('collectionChart').getContext('2d');
+    new Chart(ctx, {
+        type: 'bar',
+        data: {
+            labels: labels,
+            datasets: [{
+                label: 'Collected Amount (RM)',
+                data: values,
+                backgroundColor: [
+                    '#1f4e79',
+                    '#f4c542',
+                    '#1a8f43',
+                    '#d32027',
+                    '#335f94',
+                    '#d39d00'
+                ],
+                borderRadius: 10
+            }]
+        },
+        options: {
+            responsive: true,
+            animation: {
+                duration: 1800
+            },
+            plugins: {
+                legend: {
+                    display: true
+                }
+            },
+            scales: {
+                y: {
+                    beginAtZero: true
+                }
+            }
+        }
+    });
+
+    window.onload = function () {
+        setTimeout(function () {
+            document.getElementById('notifyPopup').style.display = 'flex';
+        }, 800);
+    };
+
+    function closePopup() {
+        document.getElementById('notifyPopup').style.display = 'none';
+    }
+</script>
 {% endblock %}

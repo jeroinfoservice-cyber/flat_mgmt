@@ -3,72 +3,155 @@
 <head>
     <title>Owner Login</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
     <style>
-        body {
-            font-family: Arial, sans-serif;
-            background: #f4f7fb;
-            margin: 0;
-            padding: 20px;
-        }
-        .box {
-            max-width: 420px;
-            margin: 50px auto;
-            background: white;
-            padding: 25px;
-            border-radius: 16px;
-            box-shadow: 0 0 12px rgba(0,0,0,0.08);
-        }
-        h2 {
-            text-align: center;
-            color: #1f4e79;
-            margin-top: 0;
-        }
-        p.head {
-            text-align: center;
-            color: #555;
-            margin-bottom: 20px;
-        }
-        input {
-            width: 100%;
-            padding: 12px;
-            margin: 8px 0 15px 0;
-            border: 1px solid #ccc;
-            border-radius: 8px;
-            font-size: 16px;
+        * {
             box-sizing: border-box;
         }
+
+        body {
+            margin: 0;
+            font-family: 'Segoe UI', Arial, sans-serif;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background:
+                linear-gradient(135deg, rgba(0, 11, 36, 0.95), rgba(0, 28, 78, 0.92)),
+                radial-gradient(circle at top left, rgba(15, 52, 120, 0.35), transparent 40%),
+                radial-gradient(circle at bottom right, rgba(0, 60, 140, 0.35), transparent 35%);
+            overflow: hidden;
+        }
+
+        body::before {
+            content: "";
+            position: absolute;
+            width: 140%;
+            height: 140%;
+            background:
+                linear-gradient(90deg, rgba(255,255,255,0.03) 1px, transparent 1px),
+                linear-gradient(rgba(255,255,255,0.03) 1px, transparent 1px);
+            background-size: 60px 60px;
+            animation: moveGrid 18s linear infinite;
+            opacity: 0.4;
+        }
+
+        @keyframes moveGrid {
+            0% { transform: translate(0, 0); }
+            100% { transform: translate(-60px, -60px); }
+        }
+
+        .login-box {
+            position: relative;
+            z-index: 2;
+            width: 92%;
+            max-width: 420px;
+            padding: 34px 28px;
+            border-radius: 20px;
+            background: rgba(255, 255, 255, 0.10);
+            backdrop-filter: blur(14px);
+            -webkit-backdrop-filter: blur(14px);
+            border: 1px solid rgba(255,255,255,0.18);
+            box-shadow: 0 16px 38px rgba(0,0,0,0.35);
+            text-align: center;
+        }
+
+        .title {
+            color: #f4c542;
+            font-size: 27px;
+            font-weight: bold;
+            line-height: 1.35;
+            margin-bottom: 6px;
+        }
+
+        .subtitle {
+            color: rgba(255,255,255,0.92);
+            font-size: 14px;
+            margin-bottom: 22px;
+        }
+
+        .error {
+            background: rgba(255, 73, 73, 0.14);
+            color: #ff8a8a;
+            border: 1px solid rgba(255, 120, 120, 0.22);
+            padding: 12px;
+            border-radius: 12px;
+            margin-bottom: 14px;
+            font-size: 14px;
+        }
+
+        label {
+            display: block;
+            text-align: left;
+            color: #ffffff;
+            margin: 10px 0 6px;
+            font-size: 14px;
+            font-weight: 600;
+        }
+
+        input {
+            width: 100%;
+            padding: 13px 14px;
+            border: none;
+            border-radius: 12px;
+            background: rgba(255,255,255,0.14);
+            color: white;
+            font-size: 15px;
+            outline: none;
+            margin-bottom: 10px;
+        }
+
+        input::placeholder {
+            color: rgba(255,255,255,0.65);
+        }
+
+        input:focus {
+            background: rgba(255,255,255,0.22);
+            box-shadow: 0 0 0 2px rgba(244,197,66,0.35);
+        }
+
         button {
             width: 100%;
-            padding: 12px;
-            background: #1f4e79;
-            color: white;
+            padding: 13px;
+            margin-top: 12px;
             border: none;
-            border-radius: 8px;
-            font-size: 16px;
+            border-radius: 12px;
+            background: linear-gradient(135deg, #f4c542, #dba400);
+            color: #071833;
+            font-size: 15px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: 0.2s ease;
         }
-        .error {
-            color: red;
-            text-align: center;
+
+        button:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 10px 22px rgba(244,197,66,0.30);
         }
     </style>
 </head>
 <body>
-    <div class="box">
-        <h2>{{ flat.name|default:"PERBADANAN PENGURUSAN BLOK B1" }}</h2>
-        <p class="head">House Owner Login</p>
 
-        <form method="post">
-            {% csrf_token %}
-            <label>House Number</label>
-            <input type="text" name="house" placeholder="Example: A1">
+<div class="login-box">
+    <div class="title">{{ flat.name|default:"PERBADANAN PENGURUSAN BLOK B1" }}</div>
+    <div class="subtitle">House Owner Login</div>
 
-            <label>Password</label>
-            <input type="password" name="password" placeholder="Enter password">
+    {% if error %}
+        <div class="error">{{ error }}</div>
+    {% endif %}
 
-            <button type="submit">Login</button>
-        </form>
+    <form method="post">
+        {% csrf_token %}
 
-        <p class="error">{{ error }}</p>
-    </div>
+        <label>House Number</label>
+        <input type="text" name="house" placeholder="Example: A1" required>
+
+        <label>Password</label>
+        <input type="password" name="password" placeholder="Enter password" required>
+
+        <button type="submit">Login</button>
+    </form>
+</div>
+
 </body>
 </html>

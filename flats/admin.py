@@ -33,16 +33,22 @@ admin.site.register(Payment, PaymentAdmin)
 admin.site.register(Message, MessageAdmin)
 admin.site.register(Announcement, AnnouncementAdmin)
 
-
 original_index = admin.site.index
 
 def custom_admin_index(request, extra_context=None):
     houses = House.objects.all()
+    payments = Payment.objects.all()
+    messages = Message.objects.all().order_by('-created_at')[:5]
+    announcements = Announcement.objects.all().order_by('-created_at')[:3]
+
     data = []
     paid_count = 0
     not_paid_count = 0
     total_collected = 0
     total_pending = 0
+
+    chart_labels = []
+    chart_values = []
 
     for house in houses:
         payment = Payment.objects.filter(house=house).order_by('-id').first()
@@ -62,20 +68,36 @@ def custom_admin_index(request, extra_context=None):
             "status": status
         })
 
-    total_houses = houses.count()
-    current_month = datetime.now().strftime("%B %Y")
+    # simple month-wise chart data
+    month_totals = {}
+    for p in payments:
+        month_name = p.month
+        month_totals.setdefault(month_name, 0)
+        if p.status == "Paid":
+            month_totals[month_name] += float(p.amount)
+
+    for month, value in month_totals.items():
+        chart_labels.append(month)
+        chart_values.append(value)
+
     flat = FlatInfo.objects.first()
+    latest_announcement = announcements[0].title if announcements else "No new announcements"
+    latest_message = messages[0].message_text[:80] if messages else "No new owner messages"
 
     extra_context = extra_context or {}
     extra_context.update({
         "flat_name": flat.name if flat else "PERBADANAN PENGURUSAN BLOK B1",
-        "total_houses": total_houses,
+        "total_houses": houses.count(),
         "paid_count": paid_count,
         "not_paid_count": not_paid_count,
         "house_status_data": data,
-        "current_month": current_month,
+        "current_month": datetime.now().strftime("%B %Y"),
         "total_collected": total_collected,
         "total_pending": total_pending,
+        "chart_labels": chart_labels,
+        "chart_values": chart_values,
+        "popup_title": "Management Notification",
+        "popup_message": f"Latest announcement: {latest_announcement}. Latest message: {latest_message}",
     })
 
     return original_index(request, extra_context=extra_context)
