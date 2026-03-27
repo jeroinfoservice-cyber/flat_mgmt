@@ -1,6 +1,3 @@
-from django.shortcuts import render
-
-# Create your views here.
 from django.shortcuts import render, redirect, get_object_or_404
 from .models import FlatInfo, House, Payment, Message, Announcement
 
@@ -22,7 +19,9 @@ def owner_login(request):
                 "error": "Invalid house number or password"
             })
 
-    return render(request, "owner/login.html", {"flat": flat})
+    return render(request, "owner/login.html", {
+        "flat": flat
+    })
 
 
 def owner_home(request):
@@ -33,9 +32,12 @@ def owner_home(request):
     house = House.objects.get(id=house_id)
     flat = FlatInfo.objects.first()
 
+    payment_count = Payment.objects.filter(house=house, status="Paid").count()
+
     return render(request, "owner/home.html", {
         "house": house,
         "flat": flat,
+        "payment_count": payment_count
     })
 
 
@@ -51,7 +53,7 @@ def owner_payments(request):
     return render(request, "owner/payments.html", {
         "house": house,
         "payments": payments,
-        "flat": flat,
+        "flat": flat
     })
 
 
@@ -67,7 +69,7 @@ def owner_receipt(request, payment_id):
     return render(request, "owner/receipt.html", {
         "house": house,
         "payment": payment,
-        "flat": flat,
+        "flat": flat
     })
 
 
@@ -83,7 +85,7 @@ def owner_announcements(request):
     return render(request, "owner/announcements.html", {
         "house": house,
         "announcements": announcements,
-        "flat": flat,
+        "flat": flat
     })
 
 
@@ -97,8 +99,13 @@ def owner_message(request):
 
     if request.method == "POST":
         message_text = request.POST.get("message_text", "").strip()
+
         if message_text:
-            Message.objects.create(house=house, message_text=message_text)
+            Message.objects.create(
+                house=house,
+                message_text=message_text
+            )
+
             return render(request, "owner/message.html", {
                 "house": house,
                 "flat": flat,
