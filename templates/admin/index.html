@@ -25,28 +25,96 @@
         color: white !important;
     }
 
-    /* keep normal admin sidebar, just beautify it */
+    .breadcrumbs {
+        background: #2d5870 !important;
+        color: white !important;
+    }
+
+    .breadcrumbs a {
+        color: white !important;
+    }
+
+    /* SIDEBAR */
     #nav-sidebar {
         background: linear-gradient(180deg, #001437, #08204f) !important;
-        border-right: 1px solid rgba(255,255,255,0.08);
+        border-right: 1px solid rgba(255,255,255,0.10);
     }
 
     #nav-sidebar .current-app .section,
     #nav-sidebar .module caption,
-    #nav-sidebar .module h2 {
-        background: #0d376d !important;
-        color: white !important;
-        font-weight: bold;
+    #nav-sidebar .module h2,
+    #nav-sidebar .module th {
+        background: #173a7a !important;
+        color: #ffffff !important;
+        font-weight: bold !important;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+    }
+
+    #nav-sidebar .module {
+        background: transparent !important;
+    }
+
+    #nav-sidebar table,
+    #nav-sidebar tbody,
+    #nav-sidebar tr,
+    #nav-sidebar th,
+    #nav-sidebar td {
+        background: transparent !important;
+    }
+
+    #nav-sidebar tbody tr:hover {
+        background: rgba(255,255,255,0.06) !important;
     }
 
     #nav-sidebar a {
-        color: #eef4ff !important;
+        color: #f4f7ff !important;
+        font-weight: 500;
+        opacity: 1 !important;
+    }
+
+    #nav-sidebar a:link,
+    #nav-sidebar a:visited,
+    #nav-sidebar td a,
+    #nav-sidebar th a {
+        color: #f4f7ff !important;
     }
 
     #nav-sidebar a:hover {
         color: #f4c542 !important;
     }
 
+    #nav-sidebar .current-model {
+        background: rgba(255,255,255,0.08) !important;
+    }
+
+    #nav-sidebar .current-model a {
+        color: #f4c542 !important;
+        font-weight: bold;
+    }
+
+    #nav-sidebar .addlink,
+    #nav-sidebar .changelink {
+        color: #9dff93 !important;
+        font-weight: bold;
+        opacity: 1 !important;
+    }
+
+    #nav-sidebar .addlink:hover,
+    #nav-sidebar .changelink:hover {
+        color: #f4c542 !important;
+    }
+
+    #nav-filter {
+        background: #ffffff !important;
+        color: #001437 !important;
+        border: 1px solid #c7d4eb !important;
+        border-radius: 8px;
+        margin: 10px;
+        width: calc(100% - 20px);
+    }
+
+    /* MAIN CONTENT */
     #content {
         padding: 20px !important;
     }
