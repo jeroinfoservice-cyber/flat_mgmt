@@ -5,15 +5,15 @@ from .models import FlatInfo, House, Payment, Message, Announcement
 
 
 class PaymentAdmin(admin.ModelAdmin):
-    list_display = ("house", "month", "amount", "status_colored", "date_paid")
+    list_display = ("house", "month", "amount", "status_badge", "date_paid")
     list_filter = ("month", "status")
     search_fields = ("house__house_number", "month", "status")
 
-    def status_colored(self, obj):
+    def status_badge(self, obj):
         if obj.status == "Paid":
             return format_html('<span style="color: green; font-weight: bold;">Paid</span>')
         return format_html('<span style="color: red; font-weight: bold;">Not Paid</span>')
-    status_colored.short_description = "Status"
+    status_badge.short_description = "Status"
 
 
 class MessageAdmin(admin.ModelAdmin):
@@ -55,7 +55,6 @@ def custom_admin_index(request, extra_context=None):
     house_status_data = []
 
     for house in houses:
-        # safer month match
         payment = Payment.objects.filter(
             house=house,
             month__iexact=selected_month.strip()
@@ -77,7 +76,6 @@ def custom_admin_index(request, extra_context=None):
                 "status": "Not Paid"
             })
 
-    # graph for all months
     chart_labels = month_list
     chart_values = []
 
