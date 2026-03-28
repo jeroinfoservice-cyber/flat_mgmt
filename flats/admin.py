@@ -18,8 +18,12 @@ class PaymentAdmin(admin.ModelAdmin):
 
 
 class MessageAdmin(admin.ModelAdmin):
-    list_display = ('house', 'message_text', 'created_at')
+    list_display = ('house', 'short_message', 'created_at')
     search_fields = ('house__house_number', 'message_text')
+
+    def short_message(self, obj):
+        return obj.message_text[:60]
+    short_message.short_description = "Message"
 
 
 class AnnouncementAdmin(admin.ModelAdmin):
@@ -35,11 +39,19 @@ admin.site.register(Announcement, AnnouncementAdmin)
 
 original_index = admin.site.index
 
+
 def custom_admin_index(request, extra_context=None):
     houses = House.objects.all()
-    payments = Payment.objects.all()
-    messages = Message.objects.all().order_by('-created_at')[:5]
-    announcements = Announcement.objects.all().order_by('-created_at')[:3]
+    flat = FlatInfo.objects.first()
+
+    month_list = [
+        "January", "February", "March", "April", "May", "June",
+        "July", "August", "September", "October", "November", "December"
+    ]
+
+    selected_month = request.GET.get("month")
+    if not selected_month or selected_month not in month_list:
+        selected_month = datetime.now().strftime("%B")
 
     data = []
     paid_count = 0
@@ -47,11 +59,11 @@ def custom_admin_index(request, extra_context=None):
     total_collected = 0
     total_pending = 0
 
-    chart_labels = []
-    chart_values = []
-
     for house in houses:
-        payment = Payment.objects.filter(house=house).order_by('-id').first()
+        payment = Payment.objects.filter(
+            house=house,
+            month=selected_month
+        ).order_by('-id').first()
 
         if payment and payment.status == "Paid":
             status = "Paid"
@@ -68,21 +80,16 @@ def custom_admin_index(request, extra_context=None):
             "status": status
         })
 
-    # simple month-wise chart data
-    month_totals = {}
-    for p in payments:
-        month_name = p.month
-        month_totals.setdefault(month_name, 0)
-        if p.status == "Paid":
-            month_totals[month_name] += float(p.amount)
+    # chart data for all months
+    chart_labels = month_list
+    chart_values = []
 
-    for month, value in month_totals.items():
-        chart_labels.append(month)
-        chart_values.append(value)
-
-    flat = FlatInfo.objects.first()
-    latest_announcement = announcements[0].title if announcements else "No new announcements"
-    latest_message = messages[0].message_text[:80] if messages else "No new owner messages"
+    for month in month_list:
+        month_total = 0
+        month_payments = Payment.objects.filter(month=month, status="Paid")
+        for p in month_payments:
+            month_total += float(p.amount)
+        chart_values.append(month_total)
 
     extra_context = extra_context or {}
     extra_context.update({
@@ -91,15 +98,17 @@ def custom_admin_index(request, extra_context=None):
         "paid_count": paid_count,
         "not_paid_count": not_paid_count,
         "house_status_data": data,
-        "current_month": datetime.now().strftime("%B %Y"),
+        "selected_month": selected_month,
+        "month_list": month_list,
         "total_collected": total_collected,
         "total_pending": total_pending,
         "chart_labels": chart_labels,
         "chart_values": chart_values,
         "popup_title": "Management Notification",
-        "popup_message": f"Latest announcement: {latest_announcement}. Latest message: {latest_message}",
+        "popup_message": f"Showing payment summary for {selected_month}.",
     })
 
     return original_index(request, extra_context=extra_context)
+
 
 admin.site.index = custom_admin_index
