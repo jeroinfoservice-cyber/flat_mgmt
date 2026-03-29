@@ -1,4 +1,5 @@
 from django.contrib import admin
+from django.db.models import Sum
 from datetime import datetime
 from .models import FlatInfo, House, Payment, Message, Announcement
 
@@ -28,6 +29,8 @@ def custom_admin_index(request, extra_context=None):
     if not selected_month:
         selected_month = datetime.now().strftime("%B")
 
+    selected_month = selected_month.strip()
+
     paid_count = 0
     not_paid_count = 0
     total_collected = 0
@@ -35,39 +38,31 @@ def custom_admin_index(request, extra_context=None):
     house_status_data = []
 
     for house in houses:
-        payment = Payment.objects.filter(
+        month_payments = Payment.objects.filter(
             house=house,
-            month__iexact=selected_month.strip()
-        ).order_by("-id").first()
+            month__iexact=selected_month
+        )
 
-        if payment and payment.status == "Paid":
+        paid_payment = month_payments.filter(status="Paid").first()
+
+        if paid_payment:
             paid_count += 1
-            total_collected += float(payment.amount)
+            total_collected += float(paid_payment.amount or 0)
             house_status_data.append({
                 "house": house.house_number,
                 "status": "Paid"
             })
         else:
             not_paid_count += 1
-            if payment:
-                total_pending += float(payment.amount)
+
+            not_paid_payment = month_payments.filter(status="Not Paid").first()
+            if not_paid_payment:
+                total_pending += float(not_paid_payment.amount or 0)
+
             house_status_data.append({
                 "house": house.house_number,
                 "status": "Not Paid"
             })
-
-    chart_labels = month_list
-    chart_values = []
-
-    for month in month_list:
-        total_for_month = 0
-        month_payments = Payment.objects.filter(
-            month__iexact=month,
-            status="Paid"
-        )
-        for p in month_payments:
-            total_for_month += float(p.amount)
-        chart_values.append(total_for_month)
 
     extra_context = extra_context or {}
     extra_context.update({
@@ -80,10 +75,6 @@ def custom_admin_index(request, extra_context=None):
         "total_collected": total_collected,
         "total_pending": total_pending,
         "house_status_data": house_status_data,
-        "chart_labels": chart_labels,
-        "chart_values": chart_values,
-        "popup_title": "Management Notification",
-        "popup_message": f"Showing payment summary for {selected_month}.",
     })
 
     return original_index(request, extra_context=extra_context)
