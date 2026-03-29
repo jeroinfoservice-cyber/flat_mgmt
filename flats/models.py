@@ -23,8 +23,13 @@ class Payment(models.Model):
     month = models.CharField(max_length=20)
     amount = models.DecimalField(max_digits=10, decimal_places=2)
     status = models.CharField(
-        max_length=20,
-        choices=[('Paid', 'Paid'), ('Not Paid', 'Not Paid')]
+        max_length=30,
+        choices=[
+            ('Not Paid', 'Not Paid'),
+            ('Pending Confirmation', 'Pending Confirmation'),
+            ('Paid', 'Paid'),
+        ],
+        default='Not Paid'
     )
     date_paid = models.DateField(null=True, blank=True)
 
@@ -48,3 +53,22 @@ class Announcement(models.Model):
 
     def __str__(self):
         return self.title
+
+
+class MaintenanceRequest(models.Model):
+    house = models.ForeignKey(House, on_delete=models.CASCADE)
+    title = models.CharField(max_length=200)
+    description = models.TextField()
+    status = models.CharField(
+        max_length=20,
+        choices=[
+            ('Open', 'Open'),
+            ('In Progress', 'In Progress'),
+            ('Resolved', 'Resolved'),
+        ],
+        default='Open'
+    )
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"{self.house.house_number} - {self.title}"
