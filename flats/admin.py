@@ -1,37 +1,17 @@
 from django.contrib import admin
-from django.utils.html import format_html
 from datetime import datetime
 from .models import FlatInfo, House, Payment, Message, Announcement
 
 
-class PaymentAdmin(admin.ModelAdmin):
-    list_display = ("house", "month", "amount", "status_badge", "date_paid")
-    list_filter = ("month", "status")
-    search_fields = ("house__house_number", "month", "status")
-
-    def status_badge(self, obj):
-        if obj.status == "Paid":
-            return format_html('<span style="color: green; font-weight: bold;">Paid</span>')
-        return format_html('<span style="color: red; font-weight: bold;">Not Paid</span>')
-    status_badge.short_description = "Status"
-
-
-class MessageAdmin(admin.ModelAdmin):
-    list_display = ("house", "message_text", "created_at")
-    search_fields = ("house__house_number", "message_text")
-
-
-class AnnouncementAdmin(admin.ModelAdmin):
-    list_display = ("title", "created_at")
-    search_fields = ("title", "content")
-
-
+# ---- SIMPLE ADMIN REGISTRATION ----
 admin.site.register(FlatInfo)
 admin.site.register(House)
-admin.site.register(Payment, PaymentAdmin)
-admin.site.register(Message, MessageAdmin)
-admin.site.register(Announcement, AnnouncementAdmin)
+admin.site.register(Payment)
+admin.site.register(Message)
+admin.site.register(Announcement)
 
+
+# ---- CUSTOM DASHBOARD ----
 original_index = admin.site.index
 
 
@@ -81,7 +61,10 @@ def custom_admin_index(request, extra_context=None):
 
     for month in month_list:
         total_for_month = 0
-        month_payments = Payment.objects.filter(month__iexact=month, status="Paid")
+        month_payments = Payment.objects.filter(
+            month__iexact=month,
+            status="Paid"
+        )
         for p in month_payments:
             total_for_month += float(p.amount)
         chart_values.append(total_for_month)
