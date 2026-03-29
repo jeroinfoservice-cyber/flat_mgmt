@@ -1,201 +1,276 @@
 {% extends "admin/base_site.html" %}
+{% load static %}
 
 {% block extrastyle %}
 {{ block.super }}
 <style>
-body{
-background:linear-gradient(135deg,#000b24,#001c4e,#05255f);
-}
+    body {
+        background: url("{% static 'images/bg.jpg' %}") no-repeat center center fixed;
+        background-size: cover;
+    }
 
-#header{
-background:#001437!important;
-border-bottom:3px solid #f4c542;
-}
+    body::before {
+        content: "";
+        position: fixed;
+        inset: 0;
+        background: rgba(0, 11, 36, 0.82);
+        z-index: -1;
+    }
 
-#branding h1,
-#branding h1 a:link,
-#branding h1 a:visited{
-color:#f4c542!important;
-font-size:28px;
-font-weight:bold;
-}
+    #header {
+        background: #001437 !important;
+        border-bottom: 3px solid #f4c542;
+    }
 
-#user-tools,#user-tools a{
-color:white!important;
-}
+    #branding h1,
+    #branding h1 a:link,
+    #branding h1 a:visited {
+        color: #f4c542 !important;
+        font-size: 28px;
+        font-weight: bold;
+    }
 
-.breadcrumbs{
-background:#2d5870!important;
-color:white!important;
-}
+    #user-tools,
+    #user-tools a {
+        color: white !important;
+    }
 
-.breadcrumbs a{
-color:white!important;
-}
+    .breadcrumbs {
+        background: #2d5870 !important;
+        color: white !important;
+    }
 
-#nav-sidebar{
-background:linear-gradient(180deg,#001437,#08204f)!important;
-border-right:1px solid rgba(255,255,255,0.10);
-}
+    .breadcrumbs a {
+        color: white !important;
+    }
 
-#nav-sidebar a{
-color:#f4f7ff!important;
-font-weight:500;
-}
+    #nav-sidebar {
+        background: linear-gradient(180deg, #001437, #08204f) !important;
+        border-right: 1px solid rgba(255,255,255,0.12);
+    }
 
-#nav-sidebar a:hover{
-color:#f4c542!important;
-}
+    #nav-sidebar .current-app .section,
+    #nav-sidebar .module caption,
+    #nav-sidebar .module h2,
+    #nav-sidebar .module th {
+        background: #3d7ea3 !important;
+        color: #ffffff !important;
+        font-weight: bold !important;
+        text-transform: uppercase;
+    }
 
-#content{
-padding:20px!important;
-}
+    #nav-sidebar .module,
+    #nav-sidebar table,
+    #nav-sidebar tbody,
+    #nav-sidebar tr,
+    #nav-sidebar th,
+    #nav-sidebar td {
+        background: transparent !important;
+    }
 
-.dashboard-wrapper{
-max-width:1200px;
-margin:0 auto 35px auto;
-padding:26px;
-background:rgba(255,255,255,0.97);
-border-radius:22px;
-box-shadow:0 16px 40px rgba(0,0,0,0.22);
-}
+    #nav-sidebar tbody tr:hover {
+        background: rgba(255,255,255,0.08) !important;
+    }
 
-.dashboard-title{
-text-align:center;
-color:#001437;
-margin:0;
-font-size:34px;
-font-weight:700;
-}
+    #nav-sidebar a,
+    #nav-sidebar a:link,
+    #nav-sidebar a:visited,
+    #nav-sidebar td a,
+    #nav-sidebar th a {
+        color: #ffffff !important;
+        opacity: 1 !important;
+        font-weight: 600 !important;
+    }
 
-.dashboard-subtitle{
-text-align:center;
-color:#5f6b80;
-margin:8px 0 28px 0;
-font-size:16px;
-}
+    #nav-sidebar a:hover {
+        color: #f4c542 !important;
+    }
 
-.month-filter-card{
-background:linear-gradient(135deg,#f7faff,#eef4ff);
-border:1px solid #dce7f5;
-border-radius:20px;
-padding:22px;
-margin-bottom:22px;
-display:flex;
-align-items:center;
-justify-content:center;
-gap:16px;
-flex-wrap:wrap;
-}
+    #nav-sidebar .current-model {
+        background: rgba(255,255,255,0.10) !important;
+    }
 
-.month-filter-card h3{
-margin:0;
-color:#001437;
-font-size:24px;
-}
+    #nav-sidebar .current-model a {
+        color: #f4c542 !important;
+        font-weight: bold !important;
+    }
 
-.month-filter-card select{
-padding:12px 16px;
-border-radius:12px;
-border:1px solid #cfdcf0;
-font-size:16px;
-min-width:220px;
-background:white;
-}
+    #nav-sidebar .addlink,
+    #nav-sidebar .changelink {
+        color: #8cff7a !important;
+        font-weight: bold !important;
+        opacity: 1 !important;
+    }
 
-.summary-grid{
-display:grid;
-grid-template-columns:repeat(4,1fr);
-gap:18px;
-margin-bottom:24px;
-}
+    #nav-sidebar .addlink:hover,
+    #nav-sidebar .changelink:hover {
+        color: #f4c542 !important;
+    }
 
-.summary-card{
-background:white;
-border-radius:18px;
-padding:22px;
-text-align:center;
-box-shadow:0 8px 18px rgba(0,0,0,0.07);
-border:1px solid #edf1f6;
-}
+    #nav-filter {
+        background: #ffffff !important;
+        color: #001437 !important;
+        border: 1px solid #c7d4eb !important;
+        border-radius: 8px;
+        margin: 10px;
+        width: calc(100% - 20px);
+    }
 
-.summary-card h3{
-margin:0;
-color:#4c596d;
-font-size:18px;
-}
+    #content {
+        padding: 20px !important;
+    }
 
-.summary-card p{
-margin:14px 0 0;
-font-size:30px;
-font-weight:bold;
-}
+    #content-main {
+        float: none;
+        width: 100%;
+    }
 
-.blue p{color:#1f4e79;}
-.green p{color:#1a8f43;}
-.red p{color:#d32027;}
-.gold p{color:#d39d00;}
+    #content-related {
+        display: none;
+    }
 
-.section-title{
-color:#001437;
-font-size:24px;
-font-weight:bold;
-margin:20px 0 14px 0;
-}
+    .dashboard-wrapper {
+        max-width: 1200px;
+        margin: 0 auto 35px auto;
+        padding: 26px;
+        background: rgba(255,255,255,0.94);
+        border-radius: 22px;
+        box-shadow: 0 16px 40px rgba(0,0,0,0.22);
+        backdrop-filter: blur(2px);
+    }
 
-.chart-card{
-background:white;
-border-radius:18px;
-padding:18px;
-box-shadow:0 8px 18px rgba(0,0,0,0.07);
-margin-bottom:24px;
-max-width:760px;
-margin-left:auto;
-margin-right:auto;
-}
+    .dashboard-title {
+        text-align: center;
+        color: #001437;
+        margin: 0;
+        font-size: 34px;
+        font-weight: 700;
+    }
 
-/* POPUP CSS (kept but not used) */
+    .dashboard-subtitle {
+        text-align: center;
+        color: #5f6b80;
+        margin: 8px 0 28px 0;
+        font-size: 16px;
+    }
 
-.popup-overlay{
-position:fixed;
-inset:0;
-background:rgba(0,0,0,0.45);
-display:none;
-justify-content:center;
-align-items:center;
-z-index:9999;
-}
+    .month-filter-card {
+        background: linear-gradient(135deg, #f7faff, #eef4ff);
+        border: 1px solid #dce7f5;
+        border-radius: 20px;
+        padding: 22px;
+        margin-bottom: 22px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 16px;
+        flex-wrap: wrap;
+    }
 
-.popup-box{
-width:92%;
-max-width:420px;
-background:white;
-border-radius:18px;
-padding:24px;
-box-shadow:0 18px 40px rgba(0,0,0,0.28);
-}
+    .month-filter-card h3 {
+        margin: 0;
+        color: #001437;
+        font-size: 24px;
+    }
 
-.popup-box h3{
-margin-top:0;
-color:#001437;
-font-size:24px;
-}
+    .month-filter-card select {
+        padding: 12px 16px;
+        border-radius: 12px;
+        border: 1px solid #cfdcf0;
+        font-size: 16px;
+        min-width: 220px;
+        outline: none;
+        background: white;
+    }
 
-.popup-box p{
-color:#4b5c77;
-line-height:1.6;
-}
+    .summary-grid {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 18px;
+        margin-bottom: 24px;
+    }
 
-.popup-close{
-margin-top:14px;
-padding:10px 16px;
-border:none;
-border-radius:10px;
-background:linear-gradient(135deg,#f4c542,#dba400);
-color:#001437;
-font-weight:bold;
-cursor:pointer;
-}
+    .summary-card {
+        background: white;
+        border-radius: 18px;
+        padding: 22px;
+        text-align: center;
+        box-shadow: 0 8px 18px rgba(0,0,0,0.07);
+        border: 1px solid #edf1f6;
+    }
+
+    .summary-card h3 {
+        margin: 0;
+        color: #4c596d;
+        font-size: 18px;
+    }
+
+    .summary-card p {
+        margin: 14px 0 0;
+        font-size: 30px;
+        font-weight: bold;
+    }
+
+    .blue p { color: #1f4e79; }
+    .green p { color: #1a8f43; }
+    .red p { color: #d32027; }
+    .gold p { color: #d39d00; }
+
+    .status-table-wrap {
+        background: white;
+        border-radius: 18px;
+        overflow: hidden;
+        box-shadow: 0 8px 18px rgba(0,0,0,0.07);
+        margin-bottom: 24px;
+    }
+
+    .status-table {
+        width: 100%;
+        border-collapse: collapse;
+    }
+
+    .status-table thead th {
+        background: #001437;
+        color: white;
+        padding: 14px;
+        text-align: center;
+    }
+
+    .status-table tbody td {
+        padding: 14px;
+        text-align: center;
+        border-bottom: 1px solid #edf1f6;
+    }
+
+    .status-paid {
+        color: #1a8f43;
+        font-weight: bold;
+    }
+
+    .status-unpaid {
+        color: #d32027;
+        font-weight: bold;
+    }
+
+    @media (max-width: 900px) {
+        .summary-grid {
+            grid-template-columns: repeat(2, 1fr);
+        }
+    }
+
+    @media (max-width: 650px) {
+        .summary-grid {
+            grid-template-columns: 1fr;
+        }
+
+        .dashboard-title {
+            font-size: 28px;
+        }
+
+        .month-filter-card h3 {
+            font-size: 20px;
+        }
+    }
 </style>
 {% endblock %}
 
@@ -205,125 +280,111 @@ cursor:pointer;
 
 {% block content %}
 <div class="dashboard-wrapper">
+    <h1 class="dashboard-title">{{ flat_name }}</h1>
+    <p class="dashboard-subtitle">Management Overview and Monthly Payment Controls</p>
 
-<h1 class="dashboard-title">{{ flat_name }}</h1>
-<p class="dashboard-subtitle">Management Overview and Monthly Payment Controls</p>
+    <div class="month-filter-card">
+        <h3>Select Month</h3>
+        <form method="get" style="display:flex; gap:12px; flex-wrap:wrap; justify-content:center;">
+            <select name="month" onchange="this.form.submit()">
+                {% for m in month_list %}
+                    <option value="{{ m }}" {% if m == selected_month %}selected{% endif %}>{{ m }}</option>
+                {% endfor %}
+            </select>
+        </form>
+    </div>
 
-<div class="month-filter-card">
-<h3>Select Month</h3>
+    <div class="summary-grid">
+        <div class="summary-card blue">
+            <h3>Total Houses</h3>
+            <p id="totalHouses">0</p>
+        </div>
 
-<form method="get">
-<select name="month" onchange="this.form.submit()">
-{% for m in month_list %}
-<option value="{{ m }}" {% if m == selected_month %}selected{% endif %}>{{ m }}</option>
-{% endfor %}
-</select>
-</form>
+        <div class="summary-card green">
+            <h3>Paid Houses</h3>
+            <p id="paidCount">0</p>
+        </div>
+
+        <div class="summary-card red">
+            <h3>Not Paid Houses</h3>
+            <p id="notPaidCount">0</p>
+        </div>
+
+        <div class="summary-card gold">
+            <h3>Month</h3>
+            <p>{{ selected_month }}</p>
+        </div>
+
+        <div class="summary-card green">
+            <h3>Total Collected</h3>
+            <p>RM {{ total_collected }}</p>
+        </div>
+
+        <div class="summary-card red">
+            <h3>Total Pending</h3>
+            <p>RM {{ total_pending }}</p>
+        </div>
+    </div>
+
+    <div class="status-table-wrap">
+        <table class="status-table">
+            <thead>
+                <tr>
+                    <th>House Number</th>
+                    <th>Status</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for item in house_status_data %}
+                <tr>
+                    <td>{{ item.house }}</td>
+                    <td>
+                        {% if item.status == "Paid" %}
+                            <span class="status-paid">Paid</span>
+                        {% else %}
+                            <span class="status-unpaid">Not Paid</span>
+                        {% endif %}
+                    </td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="2">No payment data found for this month.</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    {{ block.super }}
 </div>
-
-<div class="summary-grid">
-
-<div class="summary-card blue">
-<h3>Total Houses</h3>
-<p id="totalHouses">0</p>
-</div>
-
-<div class="summary-card green">
-<h3>Paid Houses</h3>
-<p id="paidCount">0</p>
-</div>
-
-<div class="summary-card red">
-<h3>Not Paid Houses</h3>
-<p id="notPaidCount">0</p>
-</div>
-
-<div class="summary-card gold">
-<h3>Month</h3>
-<p>{{ selected_month }}</p>
-</div>
-
-<div class="summary-card green">
-<h3>Total Collected</h3>
-<p>RM {{ total_collected }}</p>
-</div>
-
-<div class="summary-card red">
-<h3>Total Pending</h3>
-<p>RM {{ total_pending }}</p>
-</div>
-
-</div>
-
-<h2 class="section-title">Collection Graph</h2>
-
-<div class="chart-card">
-<canvas id="collectionChart" height="90"></canvas>
-</div>
-
-{{ block.super }}
-
-</div>
-
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
 <script>
+    function animateValue(id, start, end, duration) {
+        if (end <= 0) {
+            document.getElementById(id).textContent = 0;
+            return;
+        }
 
-const labels={{ chart_labels|safe }};
-const values={{ chart_values|safe }};
+        let range = end - start;
+        let current = start;
+        let increment = end > start ? 1 : -1;
+        let stepTime = Math.max(Math.floor(duration / range), 20);
+        let obj = document.getElementById(id);
 
-const ctx=document.getElementById('collectionChart').getContext('2d');
+        let timer = setInterval(function () {
+            current += increment;
+            obj.textContent = current;
 
-new Chart(ctx,{
-type:'bar',
-data:{
-labels:labels,
-datasets:[{
-label:'Collected Amount (RM)',
-data:values,
-backgroundColor:'#1f4e79',
-borderRadius:10
-}]
-},
-options:{
-responsive:true,
-scales:{
-y:{beginAtZero:true}
-}
-}
-});
+            if (current == end) {
+                clearInterval(timer);
+            }
+        }, stepTime);
+    }
 
-function animateValue(id,start,end,duration){
-
-if(end<=0){
-document.getElementById(id).textContent=0;
-return;
-}
-
-let range=end-start;
-let current=start;
-let increment=end>start?1:-1;
-let stepTime=Math.max(Math.floor(duration/range),20);
-let obj=document.getElementById(id);
-
-let timer=setInterval(function(){
-current+=increment;
-obj.textContent=current;
-
-if(current==end){
-clearInterval(timer);
-}
-
-},stepTime);
-
-}
-
-window.onload=function(){
-animateValue("totalHouses",0,{{ total_houses }},800);
-animateValue("paidCount",0,{{ paid_count }},800);
-animateValue("notPaidCount",0,{{ not_paid_count }},800);
-};
-
+    window.onload = function () {
+        animateValue("totalHouses", 0, {{ total_houses }}, 800);
+        animateValue("paidCount", 0, {{ paid_count }}, 800);
+        animateValue("notPaidCount", 0, {{ not_paid_count }}, 800);
+    };
 </script>
-
 {% endblock %}
