@@ -1,10 +1,8 @@
 from django.contrib import admin
-from django.db.models import Sum
 from datetime import datetime
 from .models import FlatInfo, House, Payment, Message, Announcement
 
 
-# ---- SIMPLE ADMIN REGISTRATION ----
 admin.site.register(FlatInfo)
 admin.site.register(House)
 admin.site.register(Payment)
@@ -12,24 +10,44 @@ admin.site.register(Message)
 admin.site.register(Announcement)
 
 
-# ---- CUSTOM DASHBOARD ----
 original_index = admin.site.index
 
 
 def custom_admin_index(request, extra_context=None):
     houses = House.objects.all()
-    flat = FlatInfo.objects.first()
+    flat_info = FlatInfo.objects.first()
 
-    month_list = [
-        "January", "February", "March", "April", "May", "June",
-        "July", "August", "September", "October", "November", "December"
+    current_year = datetime.now().year
+
+    month_choices = [
+        {"value": f"JAN-{current_year}", "label": "January"},
+        {"value": f"FEB-{current_year}", "label": "February"},
+        {"value": f"MAR-{current_year}", "label": "March"},
+        {"value": f"APR-{current_year}", "label": "April"},
+        {"value": f"MAY-{current_year}", "label": "May"},
+        {"value": f"JUN-{current_year}", "label": "June"},
+        {"value": f"JUL-{current_year}", "label": "July"},
+        {"value": f"AUG-{current_year}", "label": "August"},
+        {"value": f"SEP-{current_year}", "label": "September"},
+        {"value": f"OCT-{current_year}", "label": "October"},
+        {"value": f"NOV-{current_year}", "label": "November"},
+        {"value": f"DEC-{current_year}", "label": "December"},
     ]
+
+    current_abbr = datetime.now().strftime("%b").upper()
+    default_selected = f"{current_abbr}-{current_year}"
 
     selected_month = request.GET.get("month")
     if not selected_month:
-        selected_month = datetime.now().strftime("%B")
+        selected_month = default_selected
 
-    selected_month = selected_month.strip()
+    selected_month = selected_month.strip().upper()
+
+    display_month = selected_month
+    for item in month_choices:
+        if item["value"] == selected_month:
+            display_month = item["label"]
+            break
 
     paid_count = 0
     not_paid_count = 0
@@ -54,10 +72,9 @@ def custom_admin_index(request, extra_context=None):
             })
         else:
             not_paid_count += 1
-
-            not_paid_payment = month_payments.filter(status="Not Paid").first()
-            if not_paid_payment:
-                total_pending += float(not_paid_payment.amount or 0)
+            pending_payment = month_payments.filter(status="Not Paid").first()
+            if pending_payment:
+                total_pending += float(pending_payment.amount or 0)
 
             house_status_data.append({
                 "house": house.house_number,
@@ -66,9 +83,10 @@ def custom_admin_index(request, extra_context=None):
 
     extra_context = extra_context or {}
     extra_context.update({
-        "flat_name": flat.name if flat else "PERBADANAN PENGURUSAN BLOK B1",
+        "flat_name": flat_info.name if flat_info else "PERBADANAN PENGURUSAN BLOK B1",
         "selected_month": selected_month,
-        "month_list": month_list,
+        "display_month": display_month,
+        "month_choices": month_choices,
         "total_houses": houses.count(),
         "paid_count": paid_count,
         "not_paid_count": not_paid_count,

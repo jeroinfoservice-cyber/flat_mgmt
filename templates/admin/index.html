@@ -287,8 +287,10 @@
         <h3>Select Month</h3>
         <form method="get" style="display:flex; gap:12px; flex-wrap:wrap; justify-content:center;">
             <select name="month" onchange="this.form.submit()">
-                {% for m in month_list %}
-                    <option value="{{ m }}" {% if m == selected_month %}selected{% endif %}>{{ m }}</option>
+                {% for item in month_choices %}
+                    <option value="{{ item.value }}" {% if item.value == selected_month %}selected{% endif %}>
+                        {{ item.label }}
+                    </option>  
                 {% endfor %}
             </select>
         </form>
