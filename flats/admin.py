@@ -1,4 +1,5 @@
 from decimal import Decimal
+from datetime import datetime
 from django.contrib import admin
 from django.template.response import TemplateResponse
 from .models import FlatInfo, House, Payment, Message, Announcement
@@ -37,7 +38,13 @@ class AnnouncementAdmin(admin.ModelAdmin):
 
 
 def normalize_text(value):
-    return str(value).strip().lower() if value else ""
+    return str(value).strip().upper() if value else ""
+
+
+def generate_year_months(year):
+    month_names = ["JAN", "FEB", "MAR", "APR", "MAY", "JUN",
+                   "JUL", "AUG", "SEP", "OCT", "NOV", "DEC"]
+    return [f"{m}-{year}" for m in month_names]
 
 
 def custom_admin_index(request, extra_context=None):
@@ -48,31 +55,21 @@ def custom_admin_index(request, extra_context=None):
     payments = Payment.objects.select_related("house").all()
     flat_info = FlatInfo.objects.first()
 
-    # Build month list safely from DB
-    month_map = {}
-    for payment in payments:
-        raw_month = (payment.month or "").strip()
-        if raw_month:
-            key = normalize_text(raw_month)
-            if key not in month_map:
-                month_map[key] = raw_month
+    current_year = datetime.now().year
+    months = generate_year_months(current_year)
 
-    months = sorted(month_map.values())
-
-    selected_month = (request.GET.get("month") or "").strip()
-    if not selected_month and months:
-        selected_month = months[-1]
-
-    selected_month_key = normalize_text(selected_month)
+    selected_month = (request.GET.get("month") or "").strip().upper()
+    if not selected_month:
+        selected_month = datetime.now().strftime("%b-%Y").upper()
 
     paid_house_ids = set()
     total_collected = Decimal("0.00")
 
     for payment in payments:
-        payment_month_key = normalize_text(payment.month)
-        payment_status_key = normalize_text(payment.status)
+        payment_month = normalize_text(payment.month)
+        payment_status = normalize_text(payment.status)
 
-        if payment_month_key == selected_month_key and payment_status_key == "paid":
+        if payment_month == selected_month and payment_status == "PAID":
             paid_house_ids.add(payment.house_id)
             total_collected += payment.amount or Decimal("0.00")
 
@@ -82,16 +79,14 @@ def custom_admin_index(request, extra_context=None):
 
     house_status_data = []
     for house in houses:
-        is_paid = house.id in paid_house_ids
         house_status_data.append({
             "house_number": house.house_number,
-            "status": "Paid" if is_paid else "Not Paid",
+            "status": "Paid" if house.id in paid_house_ids else "Not Paid",
         })
 
     context = {
         **admin.site.each_context(request),
         "title": "Site administration",
-        "subtitle": None,
         "flat_info": flat_info,
         "months": months,
         "selected_month": selected_month,
@@ -101,10 +96,11 @@ def custom_admin_index(request, extra_context=None):
         "total_collected": total_collected,
         "total_pending": Decimal("0.00"),
         "house_status_data": house_status_data,
+        "available_apps": admin.site.get_app_list(request),
     }
     context.update(extra_context)
 
-    return TemplateResponse(request, "admin/index.html", context)
+    return TemplateResponse(request, "admin/custom_index.html", context)
 
 
 admin.site.index = custom_admin_index
