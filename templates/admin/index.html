@@ -1,187 +1,65 @@
 {% extends "admin/base_site.html" %}
+{% load static %}
+
+{% block bodyclass %}dashboard{% endblock %}
 
 {% block content %}
+<div id="content-main">
+    <div class="dashboard-wrapper">
 
-<style>
-    .dashboard-wrapper {
-        max-width: 1200px;
-        margin: 20px auto;
-        background: rgba(255,255,255,0.95);
-        border-radius: 24px;
-        padding: 30px;
-        box-shadow: 0 15px 35px rgba(0,0,0,0.15);
-    }
+        <h1 style="text-align:center; margin-bottom:10px;">
+            PERBADANAN PENGURUSAN BLOK B1
+        </h1>
 
-    .dashboard-title {
-        text-align: center;
-        font-size: 34px;
-        font-weight: bold;
-        color: #0A1F44;
-        margin-bottom: 8px;
-    }
+        <p style="text-align:center; margin-bottom:30px;">
+            Management Overview and Monthly Payment Controls
+        </p>
 
-    .dashboard-subtitle {
-        text-align: center;
-        color: #5a6780;
-        margin-bottom: 25px;
-        font-size: 17px;
-    }
-
-    .month-box {
-        text-align: center;
-        margin-bottom: 25px;
-        background: #f3f7ff;
-        padding: 18px;
-        border-radius: 18px;
-    }
-
-    .month-box select {
-        padding: 10px 14px;
-        border-radius: 10px;
-        border: 1px solid #b9c7dd;
-        font-size: 15px;
-        min-width: 220px;
-    }
-
-    .cards {
-        display: grid;
-        grid-template-columns: repeat(4, 1fr);
-        gap: 18px;
-        margin-bottom: 25px;
-    }
-
-    .card {
-        background: white;
-        border-radius: 18px;
-        padding: 24px;
-        text-align: center;
-        box-shadow: 0 8px 20px rgba(0,0,0,0.08);
-    }
-
-    .card h3 {
-        margin: 0 0 12px 0;
-        color: #4d5b73;
-        font-size: 20px;
-    }
-
-    .card p {
-        margin: 0;
-        font-size: 34px;
-        font-weight: bold;
-    }
-
-    .blue { color: #1f4e79; }
-    .green { color: #0a9448; }
-    .red { color: #d92525; }
-    .gold { color: #c78d00; }
-
-    .status-box {
-        margin-top: 20px;
-        background: white;
-        border-radius: 18px;
-        overflow: hidden;
-        box-shadow: 0 8px 20px rgba(0,0,0,0.08);
-    }
-
-    .status-box table {
-        width: 100%;
-        border-collapse: collapse;
-    }
-
-    .status-box th {
-        background: #0A1F44;
-        color: white;
-        padding: 14px;
-        text-align: center;
-    }
-
-    .status-box td {
-        padding: 14px;
-        text-align: center;
-        border-bottom: 1px solid #edf1f6;
-    }
-
-    .paid-text {
-        color: #0a9448;
-        font-weight: bold;
-    }
-
-    .notpaid-text {
-        color: #d92525;
-        font-weight: bold;
-    }
-
-    .default-admin-box {
-        max-width: 1200px;
-        margin: 25px auto;
-        background: rgba(255,255,255,0.95);
-        border-radius: 24px;
-        padding: 20px;
-        box-shadow: 0 15px 35px rgba(0,0,0,0.10);
-    }
-
-    @media (max-width: 1000px) {
-        .cards {
-            grid-template-columns: repeat(2, 1fr);
-        }
-    }
-
-    @media (max-width: 650px) {
-        .cards {
-            grid-template-columns: 1fr;
-        }
-    }
-</style>
-
-<div class="dashboard-wrapper">
-    <div class="dashboard-title">{{ flat_name }}</div>
-    <div class="dashboard-subtitle">Management Overview and Monthly Payment Controls</div>
-
-    <div class="month-box">
-        <form method="get">
-            <label style="font-size: 18px; font-weight: bold; color: #0A1F44; margin-right: 10px;">Select Month</label>
-            <select name="month" onchange="this.form.submit()">
-                {% for m in month_choices %}
-                    <option value="{{ m }}" {% if m == selected_month %}selected{% endif %}>{{ m }}</option>
+        <form method="get" style="text-align:center; margin-bottom:30px;">
+            <label for="month"><strong>Select Month</strong></label>
+            <select name="month" id="month" onchange="this.form.submit()">
+                <option value="">-- Select Month --</option>
+                {% for month in months %}
+                    <option value="{{ month }}" {% if month == selected_month %}selected{% endif %}>
+                        {{ month }}
+                    </option>
                 {% endfor %}
             </select>
         </form>
-    </div>
 
-    <div class="cards">
-        <div class="card">
-            <h3>Total Houses</h3>
-            <p class="blue">{{ total_houses }}</p>
+        <div class="summary-cards">
+            <div class="card">
+                <h3>Total Houses</h3>
+                <p>{{ total_houses }}</p>
+            </div>
+
+            <div class="card">
+                <h3>Paid Houses</h3>
+                <p style="color:green;">{{ paid_count }}</p>
+            </div>
+
+            <div class="card">
+                <h3>Not Paid Houses</h3>
+                <p style="color:red;">{{ not_paid_count }}</p>
+            </div>
+
+            <div class="card">
+                <h3>Month</h3>
+                <p style="color:#c28b00;">{{ selected_month|default:"-" }}</p>
+            </div>
+
+            <div class="card">
+                <h3>Total Collected</h3>
+                <p style="color:green;">RM {{ total_collected }}</p>
+            </div>
+
+            <div class="card">
+                <h3>Total Pending</h3>
+                <p style="color:red;">RM {{ total_pending }}</p>
+            </div>
         </div>
 
-        <div class="card">
-            <h3>Paid Houses</h3>
-            <p class="green">{{ paid_count }}</p>
-        </div>
-
-        <div class="card">
-            <h3>Not Paid Houses</h3>
-            <p class="red">{{ not_paid_count }}</p>
-        </div>
-
-        <div class="card">
-            <h3>Month</h3>
-            <p class="gold">{{ selected_month }}</p>
-        </div>
-
-        <div class="card">
-            <h3>Total Collected</h3>
-            <p class="green">RM {{ total_collected }}</p>
-        </div>
-
-        <div class="card">
-            <h3>Total Pending</h3>
-            <p class="red">RM {{ total_pending }}</p>
-        </div>
-    </div>
-
-    <div class="status-box">
-        <table>
+        <table class="dashboard-table">
             <thead>
                 <tr>
                     <th>House Number</th>
@@ -191,27 +69,23 @@
             <tbody>
                 {% for item in house_status_data %}
                 <tr>
-                    <td>{{ item.house }}</td>
+                    <td>{{ item.house_number }}</td>
                     <td>
                         {% if item.status == "Paid" %}
-                            <span class="paid-text">Paid</span>
+                            <span style="color:green; font-weight:bold;">Paid</span>
                         {% else %}
-                            <span class="notpaid-text">Not Paid</span>
+                            <span style="color:red; font-weight:bold;">Not Paid</span>
                         {% endif %}
                     </td>
                 </tr>
                 {% empty %}
                 <tr>
-                    <td colspan="2">No data found.</td>
+                    <td colspan="2">No house data found.</td>
                 </tr>
                 {% endfor %}
             </tbody>
         </table>
+
     </div>
 </div>
-
-<div class="default-admin-box">
-    {{ block.super }}
-</div>
-
 {% endblock %}

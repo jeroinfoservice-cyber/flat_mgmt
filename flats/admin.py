@@ -2,93 +2,96 @@ from django.contrib import admin
 from django.template.response import TemplateResponse
 from .models import FlatInfo, House, Payment, Message, Announcement
 
+
 @admin.register(FlatInfo)
 class FlatInfoAdmin(admin.ModelAdmin):
-list_display = ("name",)
+    list_display = ("name",)
+
 
 @admin.register(House)
 class HouseAdmin(admin.ModelAdmin):
-list_display = ("house_number", "owner_name", "phone")
-search_fields = ("house_number", "owner_name", "phone")
+    list_display = ("house_number", "owner_name", "phone")
+    search_fields = ("house_number", "owner_name", "phone")
+
 
 @admin.register(Payment)
 class PaymentAdmin(admin.ModelAdmin):
-list_display = ("house", "month", "amount", "status", "date_paid")
-list_filter = ("status", "month")
-search_fields = ("house__house_number", "month")
+    list_display = ("house", "month", "amount", "status", "date_paid")
+    list_filter = ("status", "month")
+    search_fields = ("house__house_number", "month")
+
 
 @admin.register(Message)
 class MessageAdmin(admin.ModelAdmin):
-list_display = ("house", "message_text", "created_at")
-search_fields = ("house__house_number", "message_text")
-readonly_fields = ("created_at",)
+    list_display = ("house", "message_text", "created_at")
+    search_fields = ("house__house_number", "message_text")
+    readonly_fields = ("created_at",)
+
 
 @admin.register(Announcement)
 class AnnouncementAdmin(admin.ModelAdmin):
-list_display = ("title", "created_at")
-search_fields = ("title", "content")
-readonly_fields = ("created_at",)
+    list_display = ("title", "created_at")
+    search_fields = ("title", "content")
+    readonly_fields = ("created_at",)
 
-original_index = admin.site.index
 
 def custom_admin_index(request, extra_context=None):
-houses = House.objects.all()
-flat_info = FlatInfo.objects.first()
+    if extra_context is None:
+        extra_context = {}
 
+    houses = House.objects.all().order_by("house_number")
+    flat_info = FlatInfo.objects.first()
 
-month_choices = sorted(
-    list(Payment.objects.values_list("month", flat=True).distinct())
-)
+    months = list(
+        Payment.objects.exclude(month__isnull=True)
+        .exclude(month__exact="")
+        .values_list("month", flat=True)
+        .distinct()
+    )
+    months = sorted(months)
 
-if not month_choices:
-    month_choices = ["JAN-2026"]
+    selected_month = request.GET.get("month", "").strip()
+    if not selected_month and months:
+        selected_month = months[-1]
 
-selected_month = request.GET.get("month")
-if not selected_month:
-    selected_month = month_choices[0]
+    paid_payments = Payment.objects.none()
+    if selected_month:
+        paid_payments = Payment.objects.filter(
+            month__iexact=selected_month,
+            status__iexact="Paid"
+        )
 
-paid_count = 0
-not_paid_count = 0
-total_collected = 0
-total_pending = 0
-house_status_data = []
+    paid_house_ids = set(paid_payments.values_list("house_id", flat=True))
+    total_collected = sum(payment.amount for payment in paid_payments)
 
-for house in houses:
-    payment = Payment.objects.filter(
-        house=house,
-        month=selected_month
-    ).order_by("-id").first()
+    total_houses = houses.count()
+    paid_count = len(paid_house_ids)
+    not_paid_count = total_houses - paid_count
 
-    if payment and payment.status == "Paid":
-        paid_count += 1
-        total_collected += float(payment.amount)
+    house_status_data = []
+    for house in houses:
         house_status_data.append({
-            "house": house.house_number,
-            "status": "Paid"
-        })
-    else:
-        not_paid_count += 1
-        if payment:
-            total_pending += float(payment.amount)
-        house_status_data.append({
-            "house": house.house_number,
-            "status": "Not Paid"
+            "house_number": house.house_number,
+            "status": "Paid" if house.id in paid_house_ids else "Not Paid",
         })
 
-extra_context = extra_context or {}
-extra_context.update({
-    "flat_name": flat_info.name if flat_info else "PERBADANAN PENGURUSAN BLOK B1",
-    "selected_month": selected_month,
-    "month_choices": month_choices,
-    "total_houses": houses.count(),
-    "paid_count": paid_count,
-    "not_paid_count": not_paid_count,
-    "total_collected": total_collected,
-    "total_pending": total_pending,
-    "house_status_data": house_status_data,
-})
+    context = {
+        **admin.site.each_context(request),
+        "title": "Site administration",
+        "subtitle": None,
+        "flat_info": flat_info,
+        "months": months,
+        "selected_month": selected_month,
+        "total_houses": total_houses,
+        "paid_count": paid_count,
+        "not_paid_count": not_paid_count,
+        "total_collected": total_collected,
+        "total_pending": 0,
+        "house_status_data": house_status_data,
+    }
+    context.update(extra_context)
 
-return TemplateResponse(request, "admin/index.html", extra_context)
+    return TemplateResponse(request, "admin/index.html", context)
 
 
 admin.site.index = custom_admin_index
