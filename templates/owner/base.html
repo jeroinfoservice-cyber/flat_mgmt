@@ -1,51 +1,112 @@
-{% extends "admin/base.html" %}
 {% load static %}
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>{% block title %}Owner Panel{% endblock %}</title>
 
-{% block extrastyle %}
-{{ block.super }}
+    <style>
+        * {
+            box-sizing: border-box;
+        }
 
-<style>
-    body,
-    #container {
-        background: url("{% static 'images/bg.jpg' %}") no-repeat center center fixed !important;
-        background-size: cover !important;
-    }
+        body {
+            margin: 0;
+            font-family: Segoe UI, Arial, sans-serif;
+            background: url("{% static 'images/bg.jpg' %}") no-repeat center center fixed;
+            background-size: cover;
+            min-height: 100vh;
+        }
 
-    body::before {
-        content: "";
-        position: fixed;
-        inset: 0;
-        background: rgba(5, 20, 45, 0.35);
-        z-index: 0;
-        pointer-events: none;
-    }
+        .overlay {
+            min-height: 100vh;
+            background: rgba(5, 20, 45, 0.55);
+            padding: 20px;
+        }
 
-    #container,
-    #header,
-    .breadcrumbs,
-    #content,
-    #content-main,
-    #nav-sidebar,
-    .module,
-    .dashboard,
-    .results,
-    .change-list,
-    .change-form,
-    .app-list {
-        position: relative;
-        z-index: 1;
-    }
+        .container {
+            max-width: 1400px;
+            margin: auto;
+        }
 
-    #header {
-        background: rgba(0, 25, 55, 0.92) !important;
-    }
+        .layout {
+            display: flex;
+            gap: 20px;
+        }
 
-    .breadcrumbs {
-        background: rgba(45, 88, 112, 0.92) !important;
-    }
+        .sidebar {
+            width: 240px;
+            background: rgba(0, 25, 70, 0.92);
+            border-radius: 18px;
+            padding: 20px;
+            color: white;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.25);
+        }
 
-    #nav-sidebar {
-        background: rgba(0, 25, 55, 0.88) !important;
-    }
-</style>
-{% endblock %}
+        .sidebar h2 {
+            color: #ffd54a;
+            margin-top: 0;
+            margin-bottom: 20px;
+            font-size: 24px;
+            text-align: center;
+        }
+
+        .sidebar a {
+            display: block;
+            text-decoration: none;
+            color: white;
+            padding: 12px;
+            border-radius: 10px;
+            margin-bottom: 10px;
+            background: rgba(255,255,255,0.08);
+            transition: 0.25s;
+        }
+
+        .sidebar a:hover {
+            background: rgba(255,255,255,0.2);
+        }
+
+        .main-content {
+            flex: 1;
+        }
+
+        @media (max-width: 900px) {
+            .layout {
+                flex-direction: column;
+            }
+
+            .sidebar {
+                width: 100%;
+            }
+        }
+    </style>
+
+    {% block extra_css %}{% endblock %}
+</head>
+
+<body>
+    <div class="overlay">
+        <div class="container">
+            <div class="layout">
+
+                <div class="sidebar">
+                    <h2>FLAT SYSTEM</h2>
+
+                    <a href="{% url 'owner_home' %}">🏠 Dashboard</a>
+                    <a href="{% url 'owner_payments' %}">💰 Payments</a>
+                    <a href="{% url 'owner_announcements' %}">📢 Announcements</a>
+                    <a href="{% url 'owner_message' %}">✉️ Messages</a>
+                    <a href="{% url 'owner_logout' %}">🚪 Logout</a>
+                </div>
+
+                <div class="main-content">
+                    {% block content %}
+                    {% endblock %}
+                </div>
+
+            </div>
+        </div>
+    </div>
+</body>
+</html>
