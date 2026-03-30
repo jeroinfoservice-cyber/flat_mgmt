@@ -1,3 +1,4 @@
+from decimal import Decimal
 from django.contrib import admin
 from django.template.response import TemplateResponse
 from .models import FlatInfo, House, Payment, Message, Announcement
@@ -35,34 +36,45 @@ class AnnouncementAdmin(admin.ModelAdmin):
     readonly_fields = ("created_at",)
 
 
+def normalize_text(value):
+    return str(value).strip().lower() if value else ""
+
+
 def custom_admin_index(request, extra_context=None):
     if extra_context is None:
         extra_context = {}
 
     houses = House.objects.all().order_by("house_number")
+    payments = Payment.objects.select_related("house").all()
     flat_info = FlatInfo.objects.first()
 
-    months = list(
-        Payment.objects.exclude(month__isnull=True)
-        .exclude(month__exact="")
-        .values_list("month", flat=True)
-        .distinct()
-    )
-    months = sorted(months)
+    # Build month list safely from DB
+    month_map = {}
+    for payment in payments:
+        raw_month = (payment.month or "").strip()
+        if raw_month:
+            key = normalize_text(raw_month)
+            if key not in month_map:
+                month_map[key] = raw_month
 
-    selected_month = request.GET.get("month", "").strip()
+    months = sorted(month_map.values())
+
+    selected_month = (request.GET.get("month") or "").strip()
     if not selected_month and months:
         selected_month = months[-1]
 
-    paid_payments = Payment.objects.none()
-    if selected_month:
-        paid_payments = Payment.objects.filter(
-            month__iexact=selected_month,
-            status__iexact="Paid"
-        )
+    selected_month_key = normalize_text(selected_month)
 
-    paid_house_ids = set(paid_payments.values_list("house_id", flat=True))
-    total_collected = sum(payment.amount for payment in paid_payments)
+    paid_house_ids = set()
+    total_collected = Decimal("0.00")
+
+    for payment in payments:
+        payment_month_key = normalize_text(payment.month)
+        payment_status_key = normalize_text(payment.status)
+
+        if payment_month_key == selected_month_key and payment_status_key == "paid":
+            paid_house_ids.add(payment.house_id)
+            total_collected += payment.amount or Decimal("0.00")
 
     total_houses = houses.count()
     paid_count = len(paid_house_ids)
@@ -70,9 +82,10 @@ def custom_admin_index(request, extra_context=None):
 
     house_status_data = []
     for house in houses:
+        is_paid = house.id in paid_house_ids
         house_status_data.append({
             "house_number": house.house_number,
-            "status": "Paid" if house.id in paid_house_ids else "Not Paid",
+            "status": "Paid" if is_paid else "Not Paid",
         })
 
     context = {
@@ -86,7 +99,7 @@ def custom_admin_index(request, extra_context=None):
         "paid_count": paid_count,
         "not_paid_count": not_paid_count,
         "total_collected": total_collected,
-        "total_pending": 0,
+        "total_pending": Decimal("0.00"),
         "house_status_data": house_status_data,
     }
     context.update(extra_context)
