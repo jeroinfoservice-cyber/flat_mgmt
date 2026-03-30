@@ -1,139 +1,120 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <title>Send Message</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+{% extends "owner/base.html" %}
 
-    <style>
-        * {
-            box-sizing: border-box;
-        }
+{% block title %}Send Message{% endblock %}
 
-        body {
-            margin: 0;
-            font-family: Arial, sans-serif;
-            min-height: 100vh;
-            background: linear-gradient(135deg, #071833, #0A1F44, #12315d);
-            padding: 24px;
-        }
+{% block extra_css %}
 
-        .wrapper {
-            max-width: 700px;
-            margin: 25px auto;
-        }
+<style>
+    .page-card {
+        max-width: 700px;
+        background: rgba(255,255,255,0.98);
+        border-radius: 22px;
+        padding: 28px;
+        box-shadow: 0 18px 35px rgba(0,0,0,0.20);
+    }
 
-        .card {
-            background: rgba(255,255,255,0.98);
-            border-radius: 22px;
-            padding: 28px;
-            box-shadow: 0 18px 35px rgba(0,0,0,0.20);
+    .title {
+        margin: 0;
+        color: #0A1F44;
+        font-size: 30px;
+        font-weight: bold;
+    }
+
+    .sub {
+        margin: 8px 0 24px;
+        color: #5d6880;
+        font-size: 15px;
+    }
+
+    textarea {
+        width: 100%;
+        min-height: 170px;
+        border: 1px solid #d8e1ee;
+        border-radius: 14px;
+        padding: 16px;
+        font-size: 15px;
+        background: #f9fbff;
+        outline: none;
+        resize: vertical;
+    }
+
+    textarea:focus {
+        border-color: #1f4e79;
+        box-shadow: 0 0 0 3px rgba(31, 78, 121, 0.12);
+        background: white;
+    }
+
+    .send-btn {
+        width: 100%;
+        margin-top: 14px;
+        padding: 14px;
+        border: none;
+        border-radius: 12px;
+        background: linear-gradient(135deg, #c78d00, #f0b41a);
+        color: #10213f;
+        font-size: 16px;
+        font-weight: bold;
+        cursor: pointer;
+    }
+
+    .send-btn:hover {
+        opacity: 0.96;
+    }
+
+    .success {
+        margin-top: 14px;
+        padding: 12px;
+        border-radius: 10px;
+        background: #eefaf1;
+        color: #1a8f43;
+        border: 1px solid #cce9d5;
+        text-align: center;
+        font-weight: bold;
+    }
+
+    .back-btn {
+        display: inline-block;
+        margin-top: 18px;
+        text-decoration: none;
+        background: linear-gradient(135deg, #0A1F44, #214f80);
+        color: white;
+        padding: 12px 18px;
+        border-radius: 12px;
+        font-weight: bold;
+    }
+
+    @media (max-width: 768px) {
+        .page-card {
+            padding: 18px;
         }
 
         .title {
-            margin: 0;
-            color: #0A1F44;
-            font-size: 30px;
-            font-weight: bold;
+            font-size: 24px;
         }
+    }
+</style>
 
-        .sub {
-            margin: 8px 0 24px;
-            color: #5d6880;
-            font-size: 15px;
-        }
+{% endblock %}
 
-        textarea {
-            width: 100%;
-            min-height: 170px;
-            border: 1px solid #d8e1ee;
-            border-radius: 14px;
-            padding: 16px;
-            font-size: 15px;
-            background: #f9fbff;
-            outline: none;
-            resize: vertical;
-        }
+{% block content %}
 
-        textarea:focus {
-            border-color: #1f4e79;
-            box-shadow: 0 0 0 3px rgba(31, 78, 121, 0.12);
-            background: white;
-        }
+<div class="page-card">
+    <h1 class="title">{{ flat.name|default:"PERBADANAN PENGURUSAN BLOK B1" }}</h1>
+    <p class="sub">Send a Message to Management</p>
 
-        .send-btn {
-            width: 100%;
-            margin-top: 14px;
-            padding: 14px;
-            border: none;
-            border-radius: 12px;
-            background: linear-gradient(135deg, #c78d00, #f0b41a);
-            color: #10213f;
-            font-size: 16px;
-            font-weight: bold;
-            cursor: pointer;
-        }
+```
+<form method="post">
+    {% csrf_token %}
+    <textarea name="message_text" placeholder="Type your message here..."></textarea>
+    <button class="send-btn" type="submit">Send Message</button>
+</form>
 
-        .send-btn:hover {
-            opacity: 0.96;
-        }
+{% if success %}
+    <div class="success">{{ success }}</div>
+{% endif %}
 
-        .success {
-            margin-top: 14px;
-            padding: 12px;
-            border-radius: 10px;
-            background: #eefaf1;
-            color: #1a8f43;
-            border: 1px solid #cce9d5;
-            text-align: center;
-            font-weight: bold;
-        }
+<a class="back-btn" href="{% url 'owner_home' %}">← Back to Dashboard</a>
+```
 
-        .back-btn {
-            display: inline-block;
-            margin-top: 18px;
-            text-decoration: none;
-            background: linear-gradient(135deg, #0A1F44, #214f80);
-            color: white;
-            padding: 12px 18px;
-            border-radius: 12px;
-            font-weight: bold;
-        }
-
-        @media (max-width: 768px) {
-            body {
-                padding: 14px;
-            }
-
-            .card {
-                padding: 18px;
-            }
-
-            .title {
-                font-size: 24px;
-            }
-        }
-    </style>
-</head>
-<body>
-
-<div class="wrapper">
-    <div class="card">
-        <h1 class="title">{{ flat.name|default:"PERBADANAN PENGURUSAN BLOK B1" }}</h1>
-        <p class="sub">Send a Message to Management</p>
-
-        <form method="post">
-            {% csrf_token %}
-            <textarea name="message_text" placeholder="Type your message here..."></textarea>
-            <button class="send-btn" type="submit">Send Message</button>
-        </form>
-
-        {% if success %}
-            <div class="success">{{ success }}</div>
-        {% endif %}
-
-        <a class="back-btn" href="{% url 'owner_home' %}">← Back to Dashboard</a>
-    </div>
 </div>
-
-</body>
-</html>
+{% endblock %}
