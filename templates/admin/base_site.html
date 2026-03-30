@@ -1,0 +1,51 @@
+{% extends "admin/base.html" %}
+{% load static %}
+
+{% block extrastyle %}
+{{ block.super }}
+
+<style>
+    body,
+    #container {
+        background: url("{% static 'images/bg.jpg' %}") no-repeat center center fixed !important;
+        background-size: cover !important;
+    }
+
+    body::before {
+        content: "";
+        position: fixed;
+        inset: 0;
+        background: rgba(5, 20, 45, 0.35);
+        z-index: 0;
+        pointer-events: none;
+    }
+
+    #container,
+    #header,
+    .breadcrumbs,
+    #content,
+    #content-main,
+    #nav-sidebar,
+    .module,
+    .dashboard,
+    .results,
+    .change-list,
+    .change-form,
+    .app-list {
+        position: relative;
+        z-index: 1;
+    }
+
+    #header {
+        background: rgba(0, 25, 55, 0.92) !important;
+    }
+
+    .breadcrumbs {
+        background: rgba(45, 88, 112, 0.92) !important;
+    }
+
+    #nav-sidebar {
+        background: rgba(0, 25, 55, 0.88) !important;
+    }
+</style>
+{% endblock %}
