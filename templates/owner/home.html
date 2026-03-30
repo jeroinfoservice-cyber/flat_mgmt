@@ -1,156 +1,185 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <title>Owner Dashboard</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+{% extends "owner/base.html" %}
 
-    <style>
-        body {
-            margin: 0;
-            font-family: Arial;
-            display: flex;
-            background: linear-gradient(135deg, #071833, #0A1F44);
-            color: white;
-        }
+{% block title %}Owner Dashboard{% endblock %}
 
-        /* SIDEBAR */
-        .sidebar {
-            width: 220px;
-            background: #001437;
-            height: 100vh;
-            padding: 20px;
-            position: fixed;
-        }
+{% block extra_css %}
 
-        .sidebar h2 {
-            color: #f4c542;
-            font-size: 18px;
-        }
+<style>
 
-        .sidebar a {
-            display: block;
-            color: white;
-            text-decoration: none;
-            margin: 15px 0;
-            padding: 10px;
-            border-radius: 8px;
-        }
+.top-card{
+background:rgba(255,255,255,0.94);
+border-radius:22px;
+padding:30px;
+color:#00164d;
+box-shadow:0 12px 30px rgba(0,0,0,0.25);
+margin-bottom:20px;
+}
 
-        .sidebar a:hover {
-            background: #0A1F44;
-        }
+.top-card h1{
+margin:0 0 12px 0;
+font-size:38px;
+}
 
-        /* MAIN */
-        .main {
-            margin-left: 220px;
-            padding: 25px;
-            width: 100%;
-        }
+.top-card p{
+margin:6px 0;
+font-size:20px;
+}
 
-        .card {
-            background: white;
-            color: black;
-            padding: 20px;
-            border-radius: 15px;
-            margin-bottom: 20px;
-        }
+.cards{
+display:grid;
+grid-template-columns:repeat(4,1fr);
+gap:18px;
+margin-bottom:25px;
+}
 
-        .card h3 {
-            margin: 0;
-        }
+.card{
+background:rgba(255,255,255,0.95);
+border-radius:18px;
+padding:24px;
+text-align:center;
+box-shadow:0 8px 20px rgba(0,0,0,0.18);
+color:#00164d;
+}
 
-        .count {
-            font-size: 28px;
-            font-weight: bold;
-            color: #1f4e79;
-        }
+.card h3{
+margin:0 0 10px;
+font-size:22px;
+}
 
-        /* POPUP */
-        .popup {
-            position: fixed;
-            bottom: 20px;
-            right: 20px;
-            background: white;
-            color: black;
-            padding: 20px;
-            border-radius: 10px;
-            display: none;
-        }
+.card p{
+margin:0;
+font-size:34px;
+font-weight:bold;
+}
 
-        .btn {
-            display: block;
-            padding: 12px;
-            margin: 10px 0;
-            text-align: center;
-            border-radius: 8px;
-            text-decoration: none;
-            color: white;
-        }
+.actions{
+display:grid;
+gap:15px;
+}
 
-        .blue { background: #1f4e79; }
-        .green { background: #1a8f43; }
-        .gold { background: #d39d00; color:black; }
-        .red { background: #d32027; }
-    </style>
-</head>
+.action-btn{
+display:block;
+text-align:center;
+padding:18px;
+border-radius:14px;
+color:white;
+text-decoration:none;
+font-size:20px;
+font-weight:bold;
+box-shadow:0 8px 20px rgba(0,0,0,0.18);
+transition:0.3s;
+}
 
-<body>
+.action-btn:hover{
+transform:translateY(-2px);
+}
 
-<div class="sidebar">
-    <h2>FLAT SYSTEM</h2>
+.btn-payments{
+background:#27588b;
+}
 
-    <a href="{% url 'owner_home' %}">🏠 Dashboard</a>
-    <a href="{% url 'owner_payments' %}">💰 Payments</a>
-    <a href="{% url 'owner_announcements' %}">📢 Announcements</a>
-    <a href="{% url 'owner_message' %}">✉ Messages</a>
-    <a href="{% url 'owner_logout' %}">🚪 Logout</a>
+.btn-announcements{
+background:#0a9448;
+}
+
+.btn-messages{
+background:#d4a321;
+color:#111;
+}
+
+.btn-maintenance{
+background:#7a3df0;
+}
+
+.btn-logout{
+background:#d92525;
+}
+
+@media(max-width:1100px){
+.cards{
+grid-template-columns:repeat(2,1fr);
+}
+}
+
+@media(max-width:600px){
+.cards{
+grid-template-columns:1fr;
+}
+
+.top-card h1{
+font-size:30px;
+}
+
+.top-card p{
+font-size:18px;
+}
+
+.action-btn{
+font-size:18px;
+padding:16px;
+}
+}
+
+</style>
+
+{% endblock %}
+
+{% block content %}
+
+<div class="top-card">
+<h1>Welcome, {{ house.owner_name }}</h1>
+
+<p><strong>House Number:</strong> {{ house.house_number }}</p>
+
+<p><strong>Phone:</strong> {{ house.phone }}</p>
 </div>
 
-<div class="main">
+<div class="cards">
 
-    <h2>{{ flat.name }}</h2>
+<div class="card">
+<h3>Total Payments Made</h3>
+<p>{{ total_payments }}</p>
+</div>
 
-    <div class="card">
-        <h3>House Number</h3>
-        <div class="count" id="houseCount">0</div>
-    </div>
+<div class="card">
+<h3>Announcements</h3>
+<p>{{ announcements_count }}</p>
+</div>
 
-    <div class="card">
-        <h3>Total Payments Made</h3>
-        <div class="count" id="paymentCount">0</div>
-    </div>
+<div class="card">
+<h3>Messages Sent</h3>
+<p>{{ messages_count }}</p>
+</div>
 
-    <a class="btn blue" href="{% url 'owner_payments' %}">View Payments</a>
-    <a class="btn green" href="{% url 'owner_announcements' %}">Announcements</a>
-    <a class="btn gold" href="{% url 'owner_message' %}">Send Message</a>
-    <a class="btn red" href="{% url 'owner_logout' %}">Logout</a>
+<div class="card">
+<h3>Maintenance Requests</h3>
+<p>{{ maintenance_count }}</p>
+</div>
 
 </div>
 
-<!-- POPUP -->
-<div class="popup" id="popup">
-    🔔 New announcement available!
+<div class="actions">
+
+<a class="action-btn btn-payments" href="{% url 'owner_payments' %}">
+View Payments
+</a>
+
+<a class="action-btn btn-announcements" href="{% url 'owner_announcements' %}">
+Announcements
+</a>
+
+<a class="action-btn btn-messages" href="{% url 'owner_message' %}">
+Send Message
+</a>
+
+<a class="action-btn btn-maintenance" href="{% url 'owner_maintenance_list' %}">
+Maintenance Requests
+</a>
+
+<a class="action-btn btn-logout" href="{% url 'owner_logout' %}">
+Logout
+</a>
+
 </div>
 
-<script>
-    // Animated counter
-    function animate(id, value) {
-        let i = 0;
-        let interval = setInterval(() => {
-            document.getElementById(id).innerText = i;
-            i++;
-            if (i > value) clearInterval(interval);
-        }, 30);
-    }
-
-    animate("houseCount", 1);
-    animate("paymentCount", {{ payment_count|default:0 }});
-
-    // Popup
-    setTimeout(() => {
-        document.getElementById("popup").style.display = "block";
-    }, 1000);
-</script>
-
-</body>
-</html>
+{% endblock %}
