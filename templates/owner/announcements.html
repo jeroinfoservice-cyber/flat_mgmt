@@ -1,129 +1,109 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <title>Announcements</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+{% extends "owner/base.html" %}
 
-    <style>
-        * {
-            box-sizing: border-box;
-        }
+{% block title %}Announcements{% endblock %}
 
-        body {
-            margin: 0;
-            font-family: Arial, sans-serif;
-            min-height: 100vh;
-            background: linear-gradient(135deg, #071833, #0A1F44, #12315d);
-            padding: 24px;
-        }
+{% block extra_css %}
 
-        .wrapper {
-            max-width: 900px;
-            margin: 25px auto;
-        }
+<style>
+    .page-card {
+        background: rgba(255,255,255,0.98);
+        border-radius: 22px;
+        padding: 28px;
+        box-shadow: 0 18px 35px rgba(0,0,0,0.20);
+    }
 
-        .card {
-            background: rgba(255,255,255,0.98);
-            border-radius: 22px;
-            padding: 28px;
-            box-shadow: 0 18px 35px rgba(0,0,0,0.20);
+    .title {
+        margin: 0;
+        color: #0A1F44;
+        font-size: 30px;
+        font-weight: bold;
+    }
+
+    .sub {
+        margin: 8px 0 24px;
+        color: #5d6880;
+        font-size: 15px;
+    }
+
+    .announcement {
+        background: linear-gradient(135deg, #f7faff, #eef4ff);
+        border: 1px solid #dbe6f4;
+        border-radius: 16px;
+        padding: 18px;
+        margin-bottom: 14px;
+        box-shadow: 0 8px 16px rgba(0,0,0,0.04);
+    }
+
+    .announcement h3 {
+        margin: 0 0 10px 0;
+        color: #0A1F44;
+        font-size: 20px;
+    }
+
+    .announcement p {
+        margin: 0 0 10px 0;
+        color: #2b3b53;
+        line-height: 1.6;
+    }
+
+    .announcement small {
+        color: #6c7890;
+    }
+
+    .empty-box {
+        background: #f8fbff;
+        border: 1px solid #dbe6f4;
+        padding: 16px;
+        border-radius: 14px;
+        color: #4d5b73;
+        text-align: center;
+    }
+
+    .back-btn {
+        display: inline-block;
+        margin-top: 18px;
+        text-decoration: none;
+        background: linear-gradient(135deg, #0A1F44, #214f80);
+        color: white;
+        padding: 12px 18px;
+        border-radius: 12px;
+        font-weight: bold;
+    }
+
+    @media (max-width: 768px) {
+        .page-card {
+            padding: 18px;
         }
 
         .title {
-            margin: 0;
-            color: #0A1F44;
-            font-size: 30px;
-            font-weight: bold;
+            font-size: 24px;
         }
+    }
+</style>
 
-        .sub {
-            margin: 8px 0 24px;
-            color: #5d6880;
-            font-size: 15px;
-        }
+{% endblock %}
 
-        .announcement {
-            background: linear-gradient(135deg, #f7faff, #eef4ff);
-            border: 1px solid #dbe6f4;
-            border-radius: 16px;
-            padding: 18px;
-            margin-bottom: 14px;
-            box-shadow: 0 8px 16px rgba(0,0,0,0.04);
-        }
+{% block content %}
 
-        .announcement h3 {
-            margin: 0 0 10px 0;
-            color: #0A1F44;
-            font-size: 20px;
-        }
+<div class="page-card">
+    <h1 class="title">{{ flat.name|default:"PERBADANAN PENGURUSAN BLOK B1" }}</h1>
+    <p class="sub">Latest Announcements</p>
 
-        .announcement p {
-            margin: 0 0 10px 0;
-            color: #2b3b53;
-            line-height: 1.6;
-        }
-
-        .announcement small {
-            color: #6c7890;
-        }
-
-        .empty-box {
-            background: #f8fbff;
-            border: 1px solid #dbe6f4;
-            padding: 16px;
-            border-radius: 14px;
-            color: #4d5b73;
-            text-align: center;
-        }
-
-        .back-btn {
-            display: inline-block;
-            margin-top: 18px;
-            text-decoration: none;
-            background: linear-gradient(135deg, #0A1F44, #214f80);
-            color: white;
-            padding: 12px 18px;
-            border-radius: 12px;
-            font-weight: bold;
-        }
-
-        @media (max-width: 768px) {
-            body {
-                padding: 14px;
-            }
-
-            .card {
-                padding: 18px;
-            }
-
-            .title {
-                font-size: 24px;
-            }
-        }
-    </style>
-</head>
-<body>
-
-<div class="wrapper">
-    <div class="card">
-        <h1 class="title">{{ flat.name|default:"PERBADANAN PENGURUSAN BLOK B1" }}</h1>
-        <p class="sub">Latest Announcements</p>
-
-        {% if announcements %}
-            {% for a in announcements %}
-            <div class="announcement">
-                <h3>{{ a.title }}</h3>
-                <p>{{ a.content }}</p>
-                <small>{{ a.created_at }}</small>
-            </div>
-            {% endfor %}
-        {% else %}
-            <div class="empty-box">No announcements available at the moment.</div>
-        {% endif %}
-
-        <a class="back-btn" href="{% url 'owner_home' %}">← Back to Dashboard</a>
+```
+{% if announcements %}
+    {% for a in announcements %}
+    <div class="announcement">
+        <h3>{{ a.title }}</h3>
+        <p>{{ a.content }}</p>
+        <small>{{ a.created_at }}</small>
     </div>
-</div>
+    {% endfor %}
+{% else %}
+    <div class="empty-box">No announcements available at the moment.</div>
+{% endif %}
 
-</body>
-</html>
+<a class="back-btn" href="{% url 'owner_home' %}">← Back to Dashboard</a>
+```
+
+</div>
+{% endblock %}
