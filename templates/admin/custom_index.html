@@ -2,27 +2,34 @@
 {% load static %}
 
 {% block content %}
-<div class="admin-layout">
+<p style="color:red; font-size:30px; font-weight:bold;">CUSTOM TEMPLATE LOADED</p>
 
-    <aside class="custom-sidebar">
-        <h3 class="sidebar-title">Menu</h3>
+<div style="display:flex; gap:30px; align-items:flex-start; width:100%;">
+
+    <div style="width:280px; min-width:280px; background:#0b1f5e !important; border-radius:18px; padding:18px; color:white !important; box-shadow:0 8px 20px rgba(0,0,0,0.18);">
+        <h3 style="margin:0 0 14px 0; color:white !important; font-size:20px;">Menu</h3>
 
         {% for app in available_apps %}
-            <div class="sidebar-app">
-                <div class="sidebar-app-title">{{ app.name }}</div>
+            <div style="margin-bottom:18px;">
+                <div style="font-weight:bold; color:#d9e3ff !important; margin-bottom:8px; font-size:15px;">
+                    {{ app.name }}
+                </div>
 
                 {% for model in app.models %}
-                    <a href="{{ model.admin_url }}" class="sidebar-link">
-                        {{ model.name }}
-                    </a>
+                    <div style="margin-bottom:6px;">
+                        <a href="{{ model.admin_url }}"
+                           style="display:block !important; background:rgba(255,255,255,0.12) !important; color:white !important; text-decoration:none !important; padding:10px 12px !important; border-radius:8px !important; font-weight:600 !important;">
+                            {{ model.name }}
+                        </a>
+                    </div>
                 {% endfor %}
             </div>
         {% empty %}
-            <p style="color:white;">No apps found.</p>
+            <p style="color:white !important;">No apps found.</p>
         {% endfor %}
-    </aside>
+    </div>
 
-    <div class="dashboard-area">
+    <div style="flex:1;">
         <div class="dashboard-wrapper">
             <h1 class="dashboard-title">PERBADANAN PENGURUSAN BLOK B1</h1>
             <p class="dashboard-subtitle">Management Overview and Monthly Payment Controls</p>
