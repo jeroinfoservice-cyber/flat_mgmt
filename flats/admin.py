@@ -42,8 +42,10 @@ def normalize_text(value):
 
 
 def generate_year_months(year):
-    month_names = ["JAN", "FEB", "MAR", "APR", "MAY", "JUN",
-                   "JUL", "AUG", "SEP", "OCT", "NOV", "DEC"]
+    month_names = [
+        "JAN", "FEB", "MAR", "APR", "MAY", "JUN",
+        "JUL", "AUG", "SEP", "OCT", "NOV", "DEC"
+    ]
     return [f"{m}-{year}" for m in month_names]
 
 
