@@ -109,8 +109,9 @@
             <form method="get" class="month-form">
                 <label for="month"><strong>Select Month</strong></label>
                 <select name="month" id="month" onchange="this.form.submit()">
+                    <option value="">Select Month</option>
                     {% for month in months %}
-                        <option value="{{ month }}" {% if month == selected_month %}selected{% endif %}>
+                        <option value="{{ month }}" {% if month|stringformat:"s" == selected_month|stringformat:"s" %}selected{% endif %}>
                             {{ month }}
                         </option>
                     {% endfor %}
