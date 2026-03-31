@@ -152,5 +152,19 @@
     .bold {
         font-weight: bold;
     }
+
+    /* Hide Django default sidebar */
+#nav-sidebar {
+    display: none !important;
+}
+
+/* Remove left spacing created by default sidebar */
+#content {
+    margin-left: 0 !important;
+}
+
+.main {
+    margin-left: 0 !important;
+}
 </style>
 {% endblock %}
