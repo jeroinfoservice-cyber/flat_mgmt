@@ -1,196 +1,86 @@
-from django.shortcuts import render, redirect, get_object_or_404
-from django.contrib import messages
-from .models import FlatInfo, House, Payment, Message, Announcement, MaintenanceRequest
+from django.shortcuts import render
+from django.db.models import Sum
+from .models import House, Payment, Announcement, FlatInfo, Message
+
+MONTHLY_FEE = 100.00
 
 
-def owner_required(view_func):
-    def wrapper(request, *args, **kwargs):
-        house_id = request.session.get("house_id")
+def home(request):
+    months = Payment.objects.values_list('month', flat=True).distinct().order_by('month')
 
-        if not house_id:
-            return redirect("owner_login")
+    selected_month = request.GET.get('month')
 
-        return view_func(request, *args, **kwargs)
+    if not selected_month and months.exists():
+        selected_month = months.last()
 
-    return wrapper
+    houses = House.objects.all().order_by('house_number')
+    total_houses = houses.count()
 
+    if selected_month:
+        paid_payments = Payment.objects.filter(
+            month=selected_month,
+            status='Paid'
+        )
+    else:
+        paid_payments = Payment.objects.none()
 
-def owner_login(request):
-    flat = FlatInfo.objects.first()
+    paid_house_ids = paid_payments.values_list('house_id', flat=True).distinct()
+    paid_houses_count = paid_house_ids.count()
 
-    if request.method == "POST":
-        house_number = request.POST.get("house", "").strip()
-        password = request.POST.get("password", "").strip()
+    not_paid_houses_count = total_houses - paid_houses_count
+    total_collected = paid_payments.aggregate(total=Sum('amount'))['total'] or 0
+    total_pending = not_paid_houses_count * MONTHLY_FEE
 
-        try:
-            house = House.objects.get(house_number=house_number, password=password)
-            request.session["house_id"] = house.id
-            return redirect("owner_home")
+    house_status_list = []
+    for house in houses:
+        is_paid = Payment.objects.filter(
+            house=house,
+            month=selected_month,
+            status='Paid'
+        ).exists() if selected_month else False
 
-        except House.DoesNotExist:
-            return render(request, "owner/login.html", {
-                "flat": flat,
-                "error": "Invalid house number or password"
-            })
+        house_status_list.append({
+            'house_number': house.house_number,
+            'status': 'Paid' if is_paid else 'Not Paid'
+        })
 
-    return render(request, "owner/login.html", {
-        "flat": flat
-    })
-
-
-@owner_required
-def owner_home(request):
-
-    house_id = request.session.get("house_id")
-    house = get_object_or_404(House, id=house_id)
-    flat = FlatInfo.objects.first()
-
-    total_payments = Payment.objects.filter(house=house, status="Paid").count()
-    announcements_count = Announcement.objects.count()
-    messages_count = Message.objects.filter(house=house).count()
-    maintenance_count = MaintenanceRequest.objects.filter(house=house).count()
-
-    return render(request, "owner/home.html", {
-        "house": house,
-        "flat": flat,
-        "total_payments": total_payments,
-        "announcements_count": announcements_count,
-        "messages_count": messages_count,
-        "maintenance_count": maintenance_count,
-    })
+    context = {
+        'months': months,
+        'selected_month': selected_month,
+        'total_houses': total_houses,
+        'paid_houses_count': paid_houses_count,
+        'not_paid_houses_count': not_paid_houses_count,
+        'total_collected': total_collected,
+        'total_pending': total_pending,
+        'house_status_list': house_status_list,
+    }
+    return render(request, 'owner/home.html', context)
 
 
-@owner_required
-def owner_payments(request):
-
-    house_id = request.session.get("house_id")
-    house = get_object_or_404(House, id=house_id)
-    payments = Payment.objects.filter(house=house).order_by("-id")
-    flat = FlatInfo.objects.first()
-
-    return render(request, "owner/payments.html", {
-        "house": house,
-        "payments": payments,
-        "flat": flat
-    })
+def announcements_page(request):
+    announcements = Announcement.objects.all().order_by('-created_at')
+    return render(request, 'owner/announcements.html', {'announcements': announcements})
 
 
-@owner_required
-def owner_receipt(request, payment_id):
-
-    house_id = request.session.get("house_id")
-    house = get_object_or_404(House, id=house_id)
-    payment = get_object_or_404(Payment, id=payment_id, house=house)
-    flat = FlatInfo.objects.first()
-
-    return render(request, "owner/receipt.html", {
-        "house": house,
-        "payment": payment,
-        "flat": flat
-    })
+def flat_infos_page(request):
+    flat_infos = FlatInfo.objects.all().order_by('title')
+    return render(request, 'owner/flat_infos.html', {'flat_infos': flat_infos})
 
 
-@owner_required
-def owner_announcements(request):
-
-    house_id = request.session.get("house_id")
-    house = get_object_or_404(House, id=house_id)
-    announcements = Announcement.objects.all().order_by("-created_at")
-    flat = FlatInfo.objects.first()
-
-    return render(request, "owner/announcements.html", {
-        "house": house,
-        "announcements": announcements,
-        "flat": flat
-    })
+def houses_page(request):
+    houses = House.objects.all().order_by('house_number')
+    return render(request, 'owner/houses.html', {'houses': houses})
 
 
-@owner_required
-def owner_message(request):
-
-    house_id = request.session.get("house_id")
-    house = get_object_or_404(House, id=house_id)
-    flat = FlatInfo.objects.first()
-
-    if request.method == "POST":
-
-        message_text = request.POST.get("message_text", "").strip()
-
-        if message_text:
-
-            Message.objects.create(
-                house=house,
-                message_text=message_text
-            )
-
-            return render(request, "owner/message.html", {
-                "house": house,
-                "flat": flat,
-                "success": "Message sent successfully"
-            })
-
-    return render(request, "owner/message.html", {
-        "house": house,
-        "flat": flat
-    })
+def messages_page(request):
+    messages = Message.objects.all().order_by('-created_at')
+    return render(request, 'owner/message.html', {'messages': messages})
 
 
-@owner_required
-def owner_maintenance_list(request):
-
-    house_id = request.session.get("house_id")
-    house = get_object_or_404(House, id=house_id)
-    flat = FlatInfo.objects.first()
-
-    maintenance_requests = MaintenanceRequest.objects.filter(
-        house=house
-    ).order_by("-created_at")
-
-    return render(request, "owner/maintenance_list.html", {
-        "house": house,
-        "flat": flat,
-        "maintenance_requests": maintenance_requests
-    })
+def payments_page(request):
+    payments = Payment.objects.select_related('house').all().order_by('month', 'house__house_number')
+    return render(request, 'owner/payments.html', {'payments': payments})
 
 
-@owner_required
-def owner_maintenance_create(request):
-
-    house_id = request.session.get("house_id")
-    house = get_object_or_404(House, id=house_id)
-    flat = FlatInfo.objects.first()
-
-    if request.method == "POST":
-
-        title = request.POST.get("title", "").strip()
-        description = request.POST.get("description", "").strip()
-
-        if title and description:
-
-            MaintenanceRequest.objects.create(
-                house=house,
-                title=title,
-                description=description
-            )
-
-            messages.success(
-                request,
-                "Maintenance request submitted successfully."
-            )
-
-            return redirect("owner_maintenance_list")
-
-        else:
-            messages.error(request, "Please fill in all fields.")
-
-    return render(request, "owner/maintenance_create.html", {
-        "house": house,
-        "flat": flat
-    })
-
-
-def owner_logout(request):
-
-    request.session.flush()
-
-    return redirect("owner_login")
+def receipt_page(request):
+    return render(request, 'owner/receipt.html')

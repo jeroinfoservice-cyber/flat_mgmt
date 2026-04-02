@@ -1,32 +1,33 @@
 from decimal import Decimal
-from datetime import datetime
 from django.contrib import admin
 from django.template.response import TemplateResponse
+from django.db.models import Sum
 from .models import FlatInfo, House, Payment, Message, Announcement
 
 
 @admin.register(FlatInfo)
 class FlatInfoAdmin(admin.ModelAdmin):
-    list_display = ("name",)
+    list_display = ("title",)
 
 
 @admin.register(House)
 class HouseAdmin(admin.ModelAdmin):
-    list_display = ("house_number", "owner_name", "phone")
-    search_fields = ("house_number", "owner_name", "phone")
+    list_display = ("house_number",)
+    search_fields = ("house_number",)
 
 
 @admin.register(Payment)
 class PaymentAdmin(admin.ModelAdmin):
-    list_display = ("house", "month", "amount", "status", "date_paid")
+    list_display = ("house", "month", "amount", "status", "created_at")
     list_filter = ("status", "month")
     search_fields = ("house__house_number", "month")
+    readonly_fields = ("created_at",)
 
 
 @admin.register(Message)
 class MessageAdmin(admin.ModelAdmin):
-    list_display = ("house", "message_text", "created_at")
-    search_fields = ("house__house_number", "message_text")
+    list_display = ("sender_name", "subject", "created_at")
+    search_fields = ("sender_name", "subject", "content")
     readonly_fields = ("created_at",)
 
 
@@ -41,43 +42,46 @@ def normalize_text(value):
     return str(value).strip().upper() if value else ""
 
 
-def generate_year_months(year):
-    month_names = [
-        "JAN", "FEB", "MAR", "APR", "MAY", "JUN",
-        "JUL", "AUG", "SEP", "OCT", "NOV", "DEC"
-    ]
-    return [f"{m}-{year}" for m in month_names]
-
-
 def custom_admin_index(request, extra_context=None):
     if extra_context is None:
         extra_context = {}
 
     houses = House.objects.all().order_by("house_number")
-    payments = Payment.objects.select_related("house").all()
     flat_info = FlatInfo.objects.first()
 
-    current_year = datetime.now().year
-    months = generate_year_months(current_year)
+    # Get months directly from payment records
+    raw_months = Payment.objects.values_list("month", flat=True).distinct()
 
-    selected_month = (request.GET.get("month") or "").strip().upper()
+    months = sorted(
+        [normalize_text(month) for month in raw_months if month],
+        reverse=False
+    )
+
+    selected_month = normalize_text(request.GET.get("month"))
+
+    # Default to latest available month from DB
     if not selected_month:
-        selected_month = datetime.now().strftime("%b-%Y").upper()
+        selected_month = months[-1] if months else ""
 
-    paid_house_ids = set()
-    total_collected = Decimal("0.00")
+    paid_payments = Payment.objects.filter(
+        month=selected_month,
+        status="Paid"
+    ) if selected_month else Payment.objects.none()
 
-    for payment in payments:
-        payment_month = normalize_text(payment.month)
-        payment_status = normalize_text(payment.status)
-
-        if payment_month == selected_month and payment_status == "PAID":
-            paid_house_ids.add(payment.house_id)
-            total_collected += payment.amount or Decimal("0.00")
+    paid_house_ids = set(
+        paid_payments.values_list("house_id", flat=True).distinct()
+    )
 
     total_houses = houses.count()
     paid_count = len(paid_house_ids)
     not_paid_count = total_houses - paid_count
+
+    total_collected = paid_payments.aggregate(
+        total=Sum("amount")
+    )["total"] or Decimal("0.00")
+
+    MONTHLY_FEE = Decimal("100.00")
+    total_pending = Decimal(not_paid_count) * MONTHLY_FEE
 
     house_status_data = []
     for house in houses:
@@ -96,7 +100,7 @@ def custom_admin_index(request, extra_context=None):
         "paid_count": paid_count,
         "not_paid_count": not_paid_count,
         "total_collected": total_collected,
-        "total_pending": Decimal("0.00"),
+        "total_pending": total_pending,
         "house_status_data": house_status_data,
         "available_apps": admin.site.get_app_list(request),
     }

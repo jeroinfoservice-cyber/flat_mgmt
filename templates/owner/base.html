@@ -1,6 +1,6 @@
 {% load static %}
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -13,62 +13,229 @@
 
         body {
             margin: 0;
-            font-family: Segoe UI, Arial, sans-serif;
-            background: url("{% static 'images/bg.jpg' %}") no-repeat center center fixed;
+            font-family: "Segoe UI", Arial, sans-serif;
+            background: linear-gradient(rgba(255,255,255,0.25), rgba(255,255,255,0.25)),
+                        url("{% static 'images/bg.jpg' %}") no-repeat center center fixed;
             background-size: cover;
             min-height: 100vh;
         }
 
         .overlay {
             min-height: 100vh;
-            background: rgba(5, 20, 45, 0.55);
+            background: rgba(5, 20, 45, 0.45);
             padding: 20px;
         }
 
         .container {
-            max-width: 1400px;
+            max-width: 1450px;
             margin: auto;
         }
 
         .layout {
             display: flex;
             gap: 20px;
+            align-items: stretch;
         }
 
         .sidebar {
-            width: 240px;
-            background: rgba(0, 25, 70, 0.92);
-            border-radius: 18px;
-            padding: 20px;
+            width: 270px;
+            background: linear-gradient(180deg, #081b66, #102c9c);
+            border-radius: 22px;
+            padding: 24px 18px;
             color: white;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.25);
+            box-shadow: 0 12px 30px rgba(0,0,0,0.25);
+        }
+
+        .sidebar-header {
+            text-align: center;
+            margin-bottom: 25px;
+        }
+
+        .sidebar-avatar {
+            width: 78px;
+            height: 78px;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.16);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 14px auto;
+            font-size: 32px;
+            font-weight: bold;
+            color: #ffffff;
+            box-shadow: inset 0 0 10px rgba(255,255,255,0.08);
         }
 
         .sidebar h2 {
             color: #ffd54a;
-            margin-top: 0;
-            margin-bottom: 20px;
-            font-size: 24px;
+            margin: 0;
+            font-size: 28px;
             text-align: center;
+            letter-spacing: 0.5px;
+        }
+
+        .sidebar-subtitle {
+            margin-top: 8px;
+            margin-bottom: 0;
+            text-align: center;
+            color: #dbe4ff;
+            font-size: 14px;
+        }
+
+        .sidebar-section-title {
+            font-size: 13px;
+            font-weight: 700;
+            color: #dce5ff;
+            margin: 24px 8px 10px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
         }
 
         .sidebar a {
             display: block;
             text-decoration: none;
             color: white;
-            padding: 12px;
-            border-radius: 10px;
-            margin-bottom: 10px;
-            background: rgba(255,255,255,0.08);
-            transition: 0.25s;
+            padding: 14px 16px;
+            border-radius: 14px;
+            margin-bottom: 12px;
+            background: rgba(255,255,255,0.10);
+            transition: all 0.25s ease;
+            font-weight: 600;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.08);
         }
 
         .sidebar a:hover {
-            background: rgba(255,255,255,0.2);
+            background: rgba(255,255,255,0.22);
+            transform: translateX(4px);
         }
 
         .main-content {
             flex: 1;
+            background: rgba(255,255,255,0.92);
+            border-radius: 24px;
+            padding: 30px;
+            box-shadow: 0 12px 30px rgba(0,0,0,0.15);
+            min-height: calc(100vh - 40px);
+        }
+
+        .page-title {
+            text-align: center;
+            color: #12256e;
+            font-size: 38px;
+            margin-top: 0;
+            margin-bottom: 10px;
+            font-weight: 800;
+        }
+
+        .page-subtitle {
+            text-align: center;
+            color: #66789c;
+            font-size: 18px;
+            margin-bottom: 28px;
+        }
+
+        .card-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 20px;
+            margin-bottom: 28px;
+        }
+
+        .stat-card {
+            background: #ffffff;
+            border-radius: 20px;
+            padding: 24px 20px;
+            text-align: center;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.08);
+        }
+
+        .stat-card h3 {
+            margin-top: 0;
+            margin-bottom: 14px;
+            color: #56657f;
+            font-size: 22px;
+        }
+
+        .stat-value {
+            font-size: 34px;
+            font-weight: 800;
+        }
+
+        .green {
+            color: #0aa84f;
+        }
+
+        .red {
+            color: #e53935;
+        }
+
+        .gold {
+            color: #c98a12;
+        }
+
+        .blue {
+            color: #133cc2;
+        }
+
+        .table-card {
+            background: #ffffff;
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.08);
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        table th {
+            background: #0d1f7a;
+            color: white;
+            padding: 16px;
+            font-size: 15px;
+            text-align: center;
+        }
+
+        table td {
+            padding: 15px;
+            text-align: center;
+            border-bottom: 1px solid #eaeaea;
+            font-size: 15px;
+        }
+
+        .content-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 20px;
+        }
+
+        .content-card {
+            background: #ffffff;
+            border-radius: 18px;
+            padding: 22px;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.08);
+        }
+
+        .content-card h3 {
+            margin-top: 0;
+            color: #112a7a;
+        }
+
+        .badge-paid {
+            color: #0aa84f;
+            font-weight: 700;
+        }
+
+        .badge-notpaid {
+            color: #e53935;
+            font-weight: 700;
+        }
+
+        @media (max-width: 1200px) {
+            .card-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
         }
 
         @media (max-width: 900px) {
@@ -78,6 +245,24 @@
 
             .sidebar {
                 width: 100%;
+            }
+
+            .main-content {
+                min-height: auto;
+            }
+        }
+
+        @media (max-width: 700px) {
+            .card-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .page-title {
+                font-size: 30px;
+            }
+
+            .main-content {
+                padding: 20px;
             }
         }
     </style>
@@ -91,7 +276,13 @@
             <div class="layout">
 
                 <div class="sidebar">
-                    <h2>FLAT SYSTEM</h2>
+                    <div class="sidebar-header">
+                        <div class="sidebar-avatar">A</div>
+                        <h2>FLAT SYSTEM</h2>
+                        <p class="sidebar-subtitle">Owner Management Panel</p>
+                    </div>
+
+                    <div class="sidebar-section-title">Main Menu</div>
 
                     <a href="{% url 'owner_home' %}">🏠 Dashboard</a>
                     <a href="{% url 'owner_payments' %}">💰 Payments</a>
